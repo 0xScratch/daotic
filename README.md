@@ -1,18 +1,18 @@
 # daotic
+
 degen dao with frens on lens
 
-
-## CONTRIBUTION DAO  
+## CONTRIBUTION DAO
 
 Yoo degen
-Don't push to main. 
+Don't push to main.
 Push to develop and hack your feature on feat/featname....
 
-## Roadmap 
+## Roadmap
 
 => Set out Roadmap
-=> Tech & Protocol Research 
-=> Governance Setup & Research 
+=> Tech & Protocol Research
+=> Governance Setup & Research
 
 0. List requirements
 1. Agree on Stack & Chain
@@ -21,9 +21,8 @@ Push to develop and hack your feature on feat/featname....
 4. Hack, Test & develop
 5. MVP version 1 done! **27.9.23**
 
+## Ideas on Tech and Stack
 
-
-## Ideas on Tech and Stack 
 - Lens
 - Zodiac SAFE
 - SAFE
@@ -38,4 +37,4 @@ Push to develop and hack your feature on feat/featname....
 - Tendderly Sim
 - Otoco
 - Consensys Dilligence
-- 
+-
