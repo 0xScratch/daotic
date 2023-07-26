@@ -1,39 +1,28 @@
 {
-  "name": "@owieth/foundry-setup",
+  "name": "daotic",
   "version": "1.0.0",
-  "description": "Foundry-based template for developing Solidity smart contracts",
+  "description": "degen dao with frens on lens",
+  "main": "index.js",
   "directories": {
     "lib": "lib",
     "test": "tests"
   },
-  "scripts": {
-    "lint": "yarn lint:sol && yarn prettier",
-    "lint:sol": "forge fmt --check && yarn solhint \"{script,src,test}/**/*.sol\"",
-    "prettier": "prettier --write \"**/*.{json,md,yml}\""
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/owieth/foundry-setup.git"
-  },
-  "author": {
-    "name": "Olivier Winkler",
-    "url": "https://github.com/owieth"
-  },
-  "keywords": [
-    "blockchain",
-    "ethereum",
-    "forge",
-    "foundry",
-    "smart-contracts",
-    "solidity",
-    "template"
-  ],
-  "bugs": {
-    "url": "https://github.com/owieth/foundry-setup/issues"
-  },
-  "homepage": "https://github.com/owieth/foundry-setup#readme",
   "devDependencies": {
     "prettier": "^2.8.8",
     "solhint": "^3.4.1"
-  }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/swissDAO/daotic.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/swissDAO/daotic/issues"
+  },
+  "homepage": "https://github.com/swissDAO/daotic#readme"
 }
