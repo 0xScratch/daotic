@@ -24,9 +24,6 @@ contract SwissDAO is ERC1155, AccessControl {
     uint256 public constant ACTIVITY_POINTS = 2;
 
     /// @notice Explain to a developer any extra details
-    uint256 public constant ASSIGNED_ROLES = 3;
-
-    /// @notice Explain to a developer any extra details
     bytes32 public constant CORE_DELEGATE_ROLE = keccak256("CORE_DELEGATE_ROLE");
 
     /// @notice Explain to a developer any extra details
