@@ -33,3 +33,8 @@ based on the ERC1155 standard
   * experience points
   * activity points
   * assigned roles
+
+## Voting mechanism
+
+Voting power of each member is proportional to their Level / Experience Points.
+(A Level is directly calculated from experience points.)
