@@ -13,12 +13,7 @@ contract DAONation is DAOManagement, ERC1155Burnable {
         // _mint(msg.sender, NOTHING, 10**18, "");
     }
 
-    function uri(uint256 _tokenid) override public pure returns (string memory) {
-        return string(
-            abi.encodePacked(
-                "https://swissdao.space/api/item/",
-                Strings.toString(_tokenid),".json"
-            )
-        );
+    function uri(uint256 _tokenid) public pure override returns (string memory) {
+        return string(abi.encodePacked("https://swissdao.space/api/item/", Strings.toString(_tokenid), ".json"));
     }
 }
