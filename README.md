@@ -34,7 +34,20 @@ Push to develop and hack your feature on feat/featname....
 - Moloch DAO
 - Commonwealth
 - O.Z. Stack
-- Tendderly Sim
+- Tenderly Sim
 - Otoco
 - Consensys Dilligence
 -
+
+## Setup
+
+We're running on a Foundry x Hardhat project and use the following remappings:
+
+@std/=lib/forge-std/src/
+@oz/=lib/openzeppelin-contracts/contracts/
+
+Be aware that Foundry uses git submodules for it's dependency tree, so please use
+
+```
+git checkout ... -recursive
+```
