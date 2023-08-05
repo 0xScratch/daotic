@@ -13,6 +13,9 @@ contract SwissDAO is ERC1155, AccessControl {
     /// @notice This error is thrown when a token is intended to be transferred
     error SwissDAO_SoulboundTokenError();
 
+    /// @notice This error is thrown when a member does not have the required role for calling a function
+    error SwissDAO_PermissionError();
+
     /*//////////////////////////////////////////////////////////////
                               CONSTANTS
     //////////////////////////////////////////////////////////////*/
@@ -60,6 +63,15 @@ contract SwissDAO is ERC1155, AccessControl {
     /// @param _tokenid Sender's Address
     function uri(uint256 _tokenid) public pure override returns (string memory) {
         return string(abi.encodePacked("https://swissdao.space/api/item/", Strings.toString(_tokenid), ".json"));
+    }
+
+
+    function increaseExperiencePoints(address member, uint256 amount) public {
+        // Check that the calling account has the CORE_DELEGATE_ROLE or COMMUNITY_MANAGER_ROLE
+        if(!(hasRole(CORE_DELEGATE_ROLE, msg.sender) || hasRole(COMMUNITY_MANAGER_ROLE, msg.sender))) {
+            revert SwissDAO_PermissionError();
+        }
+        _mint(member, EXPERIENCE_POINTS, amount);
     }
 
     /*//////////////////////////////////////////////////////////////
