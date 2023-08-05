@@ -1,15 +1,11 @@
 // SPDX-License-Identifier: Proprietary
 pragma solidity ^0.8.18;
 
-<<<<<<< HEAD
-import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
-import "@openzeppelin/contracts/access/AccessControl.sol";
-=======
+import {AccessControl} from "@oz/access/AccessControl.sol";
 import {ERC1155} from "@oz/token/ERC1155/ERC1155.sol";
 import {Strings} from "@oz/utils/Strings.sol";
->>>>>>> 4a0acb453d1180a6a47445aaff5f41652ac7ebfc
 
-contract SwissDAO is ERC1155 {
+contract SwissDAO is ERC1155, AccessControl {
     /*//////////////////////////////////////////////////////////////
                                 ERRORS
     //////////////////////////////////////////////////////////////*/
@@ -27,17 +23,26 @@ contract SwissDAO is ERC1155 {
     /// @notice Explain to a developer any extra details
     uint256 public constant ACTIVITY_POINTS = 2;
 
-<<<<<<< HEAD
-    bytes32 public constant CORE_DELEGATE_ROLE = keccak256("CORE_DELEGATE_ROLE");
-    bytes32 public constant COMMUNITY_MANAGER_ROLE = keccak256("COMMUNITY_MANAGER_ROLE");
-    bytes32 public constant EVENT_MANAGER_ROLE = keccak256("EVENT_MANAGER_ROLE");
-    bytes32 public constant PROJECT_MANAGER_ROLE = keccak256("PROJECT_MANAGER_ROLE");
-    bytes32 public constant TREASURY_MANAGER_ROLE = keccak256("TREASURY_MANAGER_ROLE");
-    bytes32 public constant DEVELOPER_ROLE = keccak256("DEVELOPER_ROLE");
-=======
     /// @notice Explain to a developer any extra details
     uint256 public constant ASSIGNED_ROLES = 3;
->>>>>>> 4a0acb453d1180a6a47445aaff5f41652ac7ebfc
+
+    /// @notice Explain to a developer any extra details
+    bytes32 public constant CORE_DELEGATE_ROLE = keccak256("CORE_DELEGATE_ROLE");
+
+    /// @notice Explain to a developer any extra details
+    bytes32 public constant COMMUNITY_MANAGER_ROLE = keccak256("COMMUNITY_MANAGER_ROLE");
+
+    /// @notice Explain to a developer any extra details
+    bytes32 public constant EVENT_MANAGER_ROLE = keccak256("EVENT_MANAGER_ROLE");
+
+    /// @notice Explain to a developer any extra details
+    bytes32 public constant PROJECT_MANAGER_ROLE = keccak256("PROJECT_MANAGER_ROLE");
+
+    /// @notice Explain to a developer any extra details
+    bytes32 public constant TREASURY_MANAGER_ROLE = keccak256("TREASURY_MANAGER_ROLE");
+
+    /// @notice Explain to a developer any extra details
+    bytes32 public constant DEVELOPER_ROLE = keccak256("DEVELOPER_ROLE");
 
     /*//////////////////////////////////////////////////////////////
                                CONSTRUCTOR
@@ -85,5 +90,12 @@ contract SwissDAO is ERC1155 {
         }
 
         super._beforeTokenTransfer(_operator, _from, _to, _ids, _amounts, _data);
+    }
+
+    /// @notice Explain to a developer any extra details
+    /// @dev Explain to a developer any extra details
+    /// @param _interfaceId Address
+    function supportsInterface(bytes4 _interfaceId) public view override(ERC1155, AccessControl) returns (bool) {
+        return super.supportsInterface(_interfaceId);
     }
 }
