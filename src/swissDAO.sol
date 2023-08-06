@@ -65,13 +65,22 @@ contract SwissDAO is ERC1155, AccessControl {
         return string(abi.encodePacked("https://swissdao.space/api/item/", Strings.toString(_tokenid), ".json"));
     }
 
-
+    /// This function increases experience points for a specified member by a specified ammount. Only core delegates or community manegers can increase experience points.
     function increaseExperiencePoints(address member, uint256 amount) public {
         // Check that the calling account has the CORE_DELEGATE_ROLE or COMMUNITY_MANAGER_ROLE
         if(!(hasRole(CORE_DELEGATE_ROLE, msg.sender) || hasRole(COMMUNITY_MANAGER_ROLE, msg.sender))) {
             revert SwissDAO_PermissionError();
         }
         _mint(member, EXPERIENCE_POINTS, amount);
+    }
+
+    /// This function assigns a specifiec role/guild to a specified member. Only core delegates can assign roles/guilds.
+    function assignRole(address member, bytes32 roleHash){
+        // Check that the calling account has the CORE_DELEGATE_ROLE
+        if(! hasRole(CORE_DELEGATE_ROLE, msg.sender)) {
+            revert SwissDAO_PermissionError();
+        }
+        _grantRole(roleHash, member);
     }
 
     /*//////////////////////////////////////////////////////////////
