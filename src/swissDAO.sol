@@ -51,7 +51,16 @@ contract SwissDAO is ERC1155, AccessControl {
     /// @notice Explain to a developer any extra details
     /// @dev Explain to a developer any extra details
     constructor() ERC1155("https://swissdao.space/api/item/{id}.json") {
-        // _mint(msg.sender, NOTHING, 10**18, "");
+        
+        _setRoleAdmin(CORE_DELEGATE_ROLE, DEFAULT_ADMIN_ROLE); // Only the swissDAO multisig wallet can grant the core delegate role/guild.
+        _setRoleAdmin(COMMUNITY_MANAGER_ROLE, CORE_DELEGATE_ROLE); // Only core delegates can assign roles/guilds.
+        _setRoleAdmin(EVENT_MANAGER_ROLE, CORE_DELEGATE_ROLE); // Only core delegates can assign roles/guilds.
+        _setRoleAdmin(PROJECT_MANAGER_ROLE, CORE_DELEGATE_ROLE); // Only core delegates can assign roles/guilds.
+        _setRoleAdmin(TREASURY_MANAGER_ROLE, CORE_DELEGATE_ROLE); // Only core delegates can assign roles/guilds.
+        _setRoleAdmin(DEVELOPER_ROLE, CORE_DELEGATE_ROLE); // Only core delegates can assign roles/guilds.
+
+        _grantRole(DEFAULT_ADMIN_ROLE, 0x0DA0da0DA0Da0dA0dA0Da0Da0DA0dA0da0dA0da0); // swissDAO mutlisig wallet address
+        _grantRole(CORE_DELEGATE_ROLE, 0x0DA0da0DA0Da0dA0dA0Da0Da0DA0dA0da0dA0da0); // swissDAO mutlisig wallet address
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -68,19 +77,10 @@ contract SwissDAO is ERC1155, AccessControl {
     /// This function increases experience points for a specified member by a specified ammount. Only core delegates or community manegers can increase experience points.
     function increaseExperiencePoints(address member, uint256 amount) public {
         // Check that the calling account has the CORE_DELEGATE_ROLE or COMMUNITY_MANAGER_ROLE
-        if(!(hasRole(CORE_DELEGATE_ROLE, msg.sender) || hasRole(COMMUNITY_MANAGER_ROLE, msg.sender))) {
+        if(!(hasRole(DEFAULT_ADMIN_ROLE, msg.sender) || hasRole(CORE_DELEGATE_ROLE, msg.sender) || hasRole(COMMUNITY_MANAGER_ROLE, msg.sender))) {
             revert SwissDAO_PermissionError();
         }
         _mint(member, EXPERIENCE_POINTS, amount);
-    }
-
-    /// This function assigns a specifiec role/guild to a specified member. Only core delegates can assign roles/guilds.
-    function assignRole(address member, bytes32 roleHash){
-        // Check that the calling account has the CORE_DELEGATE_ROLE
-        if(! hasRole(CORE_DELEGATE_ROLE, msg.sender)) {
-            revert SwissDAO_PermissionError();
-        }
-        _grantRole(roleHash, member);
     }
 
     /*//////////////////////////////////////////////////////////////
