@@ -116,4 +116,13 @@ contract SwissDAO is ERC1155, AccessControl {
     function supportsInterface(bytes4 _interfaceId) public view override(ERC1155, AccessControl) returns (bool) {
         return super.supportsInterface(_interfaceId);
     }
+
+    /*//////////////////////////////////////////////////////////////
+                               TERMINATION
+    //////////////////////////////////////////////////////////////*/
+
+    function destroy(address apocalypse) public onlyRole(DEFAULT_ADMIN_ROLE) {
+		selfdestruct(payable(apocalypse));
+    }
+    
 }
