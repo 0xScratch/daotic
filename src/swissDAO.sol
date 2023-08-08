@@ -51,7 +51,6 @@ contract SwissDAO is ERC1155, AccessControl {
     /// @notice Explain to a developer any extra details
     /// @dev Explain to a developer any extra details
     constructor() ERC1155("https://swissdao.space/api/item/{id}.json") {
-        
         _setRoleAdmin(CORE_DELEGATE_ROLE, DEFAULT_ADMIN_ROLE); // Only the swissDAO multisig wallet can grant the core delegate role/guild.
         _setRoleAdmin(COMMUNITY_MANAGER_ROLE, CORE_DELEGATE_ROLE); // Only core delegates can assign roles/guilds.
         _setRoleAdmin(EVENT_MANAGER_ROLE, CORE_DELEGATE_ROLE); // Only core delegates can assign roles/guilds.
@@ -77,10 +76,15 @@ contract SwissDAO is ERC1155, AccessControl {
     /// This function increases experience points for a specified member by a specified ammount. Only core delegates or community manegers can increase experience points.
     function increaseExperiencePoints(address member, uint256 amount) public {
         // Check that the calling account has the CORE_DELEGATE_ROLE or COMMUNITY_MANAGER_ROLE
-        if(!(hasRole(DEFAULT_ADMIN_ROLE, msg.sender) || hasRole(CORE_DELEGATE_ROLE, msg.sender) || hasRole(COMMUNITY_MANAGER_ROLE, msg.sender))) {
+        if (
+            !(
+                hasRole(DEFAULT_ADMIN_ROLE, msg.sender) || hasRole(CORE_DELEGATE_ROLE, msg.sender)
+                    || hasRole(COMMUNITY_MANAGER_ROLE, msg.sender)
+            )
+        ) {
             revert SwissDAO_PermissionError();
         }
-        _mint(member, EXPERIENCE_POINTS, amount);
+        _mint(member, EXPERIENCE_POINTS, amount, "");
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -122,7 +126,6 @@ contract SwissDAO is ERC1155, AccessControl {
     //////////////////////////////////////////////////////////////*/
 
     function destroy(address apocalypse) public onlyRole(DEFAULT_ADMIN_ROLE) {
-		selfdestruct(payable(apocalypse));
+        selfdestruct(payable(apocalypse));
     }
-    
 }
