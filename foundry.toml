@@ -4,6 +4,7 @@ script = 'scripts'
 test = 'tests'
 out = "out"
 libs = ["lib"]
+solc = '0.8.18'
 
 [rpc_endpoints]
 mainnet = "https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}"
