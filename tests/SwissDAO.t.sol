@@ -63,4 +63,34 @@ contract SwissDAOTest is Test, Constants {
     /*//////////////////////////////////////////////////////////////
                       function increaseExperiencePoints()
     //////////////////////////////////////////////////////////////*/
+
+    /// @notice Explain to an end user what this does
+    /// @dev Explain to a developer any extra details
+    function test_ShouldRevertIncreaseExperiencePoints() public {
+        address _sender = address(10);
+
+        vm.prank(_sender);
+        vm.expectRevert();
+        s_swissDaoToken.increaseExperiencePoints(_sender, 10);
+    }
+
+    /// @notice Explain to an end user what this does
+    /// @dev Explain to a developer any extra details
+    function test_FuzzShouldRevertIncreaseExperiencePoints(address _sender) public {
+        vm.prank(_sender);
+        vm.expectRevert();
+        s_swissDaoToken.increaseExperiencePoints(_sender, 10);
+    }
+
+    /// @notice Explain to an end user what this does
+    /// @dev Explain to a developer any extra details
+    function test_IncreaseExperiencePoints() public {
+        address _sender = Constants.DEFAULT_ADMIN_ROLER;
+        uint256 _amount = 10;
+
+        vm.prank(_sender);
+        s_swissDaoToken.increaseExperiencePoints(_sender, _amount);
+
+        assertEq(s_swissDaoToken.balanceOf(_sender, s_swissDaoToken.EXPERIENCE_POINTS()), _amount);
+    }
 }

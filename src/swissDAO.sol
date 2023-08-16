@@ -110,7 +110,7 @@ contract SwissDAO is ERC1155, AccessControl {
         uint256[] memory _amounts,
         bytes memory _data
     ) internal override(ERC1155) {
-        if (_from != address(0) || _to != address(0)) {
+        if (_from != address(0)) {
             revert SwissDAO_SoulboundTokenError();
         }
 
