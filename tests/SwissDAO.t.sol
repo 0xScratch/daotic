@@ -4,12 +4,14 @@ pragma solidity ^0.8.18;
 import {Test} from "@std/Test.sol";
 import {Strings} from "@oz/utils/Strings.sol";
 
+import {Constants} from "../helpers/Constants.sol";
+
 import {SwissDAO} from "../src/SwissDAO.sol";
 
 /// @title Test for {SwissDAO}
 /// @author swissdao.space (https://github.com/swissDAO)
 /// @custom:security-contact xxx@gmail.com
-contract SwissDAOTest is Test {
+contract SwissDAOTest is Test, Constants {
     /*//////////////////////////////////////////////////////////////
                                  STORAGE
     //////////////////////////////////////////////////////////////*/
@@ -23,7 +25,7 @@ contract SwissDAOTest is Test {
     //////////////////////////////////////////////////////////////*/
 
     function setUp() public {
-        s_swissDaoToken = new SwissDAO();
+        s_swissDaoToken = new SwissDAO(Constants.DEFAULT_ADMIN_ROLER, Constants.CORE_DELEGATE_ROLER);
     }
 
     /*//////////////////////////////////////////////////////////////
