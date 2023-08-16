@@ -29,6 +29,17 @@ contract SwissDAOTest is Test, Constants {
     }
 
     /*//////////////////////////////////////////////////////////////
+                            function initialize()
+    //////////////////////////////////////////////////////////////*/
+
+    /// @notice Explain to an end user what this does
+    /// @dev Explain to a developer any extra details
+    function test_Initialization() public {
+        assertTrue(s_swissDaoToken.hasRole(Constants.DEFAULT_ADMIN_ROLE, Constants.DEFAULT_ADMIN_ROLER));
+        assertTrue(s_swissDaoToken.hasRole(Constants.CORE_DELEGATE_ROLE, Constants.CORE_DELEGATE_ROLER));
+    }
+
+    /*//////////////////////////////////////////////////////////////
                             function uri()
     //////////////////////////////////////////////////////////////*/
 
