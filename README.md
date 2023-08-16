@@ -51,3 +51,87 @@ Be aware that Foundry uses git submodules for it's dependency tree, so please us
 ```
 git checkout ... -recursive
 ```
+
+## Getting Started
+
+This is a list of the most frequently needed commands.
+
+### Build
+
+Build the contracts:
+
+```sh
+$ forge build
+```
+
+### Clean
+
+Delete the build artifacts and cache directories:
+
+```sh
+$ forge clean
+```
+
+### Compile
+
+Compile the contracts:
+
+```sh
+$ forge build
+```
+
+### Coverage
+
+Get a test coverage report:
+
+```sh
+$ forge coverage
+```
+
+### Deploy
+
+```
+make deploy ARGS="--network sepolia"
+```
+
+More commands can be found in `Makefile`
+
+### Format
+
+Format the contracts:
+
+```sh
+$ forge fmt
+```
+
+### Gas Usage
+
+Get a gas report:
+
+```sh
+$ forge test --gas-report
+```
+
+### Lint
+
+Lint the contracts:
+
+```sh
+$ yarn lint
+```
+
+```sh
+$ slither .
+```
+
+### Test
+
+Run the tests:
+
+```sh
+$ forge test
+```
+
+## License
+
+This project is licensed under MIT.
