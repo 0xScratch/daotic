@@ -19,7 +19,7 @@ ifeq ($(findstring --network sepolia,$(ARGS)),--network sepolia)
 endif
 
 deploy:
-	@forge script scripts/Token.s.sol $(NETWORK_ARGS)
+	@forge script scripts/SwissDAO.s.sol $(NETWORK_ARGS)
 
 slither:
 	slither .
