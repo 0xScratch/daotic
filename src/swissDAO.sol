@@ -84,6 +84,7 @@ contract SwissDAO is ERC1155, AccessControl {
         ) {
             revert SwissDAO_PermissionError();
         }
+
         _mint(member, EXPERIENCE_POINTS, amount, "");
     }
 
