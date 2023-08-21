@@ -5,6 +5,7 @@ import { Strings } from "@oz/utils/Strings.sol";
 import { Base64 } from "@oz/utils/Base64.sol";
 
 import { MembershipArt } from "./MembershipArt.sol";
+import { Membership } from "../Membership.sol";
 
 /// @title MembershipMetadata
 /// @author https://swissdao.space/ (https://github.com/swissDAO)
@@ -17,9 +18,16 @@ library MembershipMetadata {
 
     /// @notice Render the JSON Metadata for a given token.
     /// @return Returns base64 encoded metadata file.
-    function generateTokenURI() public pure returns (string memory) {
+    function generateTokenURI(
+        uint256 _tokenId,
+        Membership.TokenStruct memory _tokenStruct
+    )
+        public
+        pure
+        returns (string memory)
+    {
         bytes memory _svg = MembershipArt.generateSVG();
-        string memory _name = "Membership #1";
+        string memory _name = string.concat("Membership #", Strings.toString(_tokenId));
 
         /// forgefmt: disable-start
         bytes memory _metadata = abi.encodePacked(
@@ -27,13 +35,14 @@ library MembershipMetadata {
                 '"name": "',
                 _name,
                 '",',
-                '"description": "Membership of 0x000 for swissDAO",',
+                '"description": "',
+                string.concat("Membership of", Strings.toHexString(_tokenStruct.holder), '",'),
                 '"image": ',
                     '"data:image/svg+xml;base64,',
                     Base64.encode(_svg),
                     '",',
                 '"attributes": [', 
-                    _getAttributes(),
+                    _getAttributes(_tokenStruct),
                 "]",
             "}"
         );
@@ -48,8 +57,15 @@ library MembershipMetadata {
 
     /// @dev Generate all Attributes
     /// @return Returns base64 encoded attributes.
-    function _getAttributes() internal pure returns (bytes memory) {
-        return abi.encodePacked(_getTrait("Holder", "0x00", ""));
+    function _getAttributes(Membership.TokenStruct memory _tokenStruct) internal pure returns (bytes memory) {
+        return abi.encodePacked(
+            _getTrait("Holder", Strings.toHexString(_tokenStruct.holder), ""),
+            _getTrait("Minted", Strings.toHexString(_tokenStruct.mintedAt), ""),
+            _getTrait("Joined", Strings.toHexString(_tokenStruct.joinedAt), ""),
+            _getTrait("Experience Points", Strings.toHexString(_tokenStruct.experiencePoints), ""),
+            _getTrait("Activity Points", Strings.toHexString(_tokenStruct.activityPoints), ""),
+            _getTrait("State", "ONBOARDING", "")
+        );
     }
 
     /// @dev Generate the SVG snipped for a single attribute.

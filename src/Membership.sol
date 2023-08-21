@@ -192,7 +192,9 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
         override(ERC721, ERC721URIStorage)
         returns (string memory)
     {
-        return MembershipMetadata.generateTokenURI();
+        TokenStruct memory _tokenStruct = s_memberships[_tokenId];
+
+        return MembershipMetadata.generateTokenURI(_tokenId, _tokenStruct);
     }
 
     /// @dev See {IERC165-supportsInterface}.
