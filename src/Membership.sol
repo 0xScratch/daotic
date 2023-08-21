@@ -29,6 +29,24 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
                                 CONSTANTS
     //////////////////////////////////////////////////////////////*/
 
+    /// @notice Explain to a developer any extra details
+    bytes32 public constant CORE_DELEGATE_ROLE = keccak256("CORE_DELEGATE_ROLE");
+
+    /// @notice Explain to a developer any extra details
+    bytes32 public constant COMMUNITY_MANAGER_ROLE = keccak256("COMMUNITY_MANAGER_ROLE");
+
+    /// @notice Explain to a developer any extra details
+    bytes32 public constant EVENT_MANAGER_ROLE = keccak256("EVENT_MANAGER_ROLE");
+
+    /// @notice Explain to a developer any extra details
+    bytes32 public constant PROJECT_MANAGER_ROLE = keccak256("PROJECT_MANAGER_ROLE");
+
+    /// @notice Explain to a developer any extra details
+    bytes32 public constant TREASURY_MANAGER_ROLE = keccak256("TREASURY_MANAGER_ROLE");
+
+    /// @notice Explain to a developer any extra details
+    bytes32 public constant DEVELOPER_ROLE = keccak256("DEVELOPER_ROLE");
+
     /*//////////////////////////////////////////////////////////////
                                 STRUCTS
     //////////////////////////////////////////////////////////////*/
@@ -54,10 +72,19 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
                               CONSTRUCTOR
     //////////////////////////////////////////////////////////////*/
 
-    /// @dev Initialize NFTIME Contract, grant DEFAULT_ADMIN_ROLE to multisig.
-    /// @param _multisig Mutlisig address
-    constructor(address _multisig) ERC721("NFTIME", "TIME") {
-        _grantRole(DEFAULT_ADMIN_ROLE, _multisig);
+    /// @notice Initialize NFTIME Contract, grant DEFAULT_ADMIN_ROLE to multisig
+    /// @param _defaultAdminRoler New DefaultAdminRoler address
+    /// @param _coreDelegateRoler New CoreDelegateRoler address
+    constructor(address _defaultAdminRoler, address _coreDelegateRoler) ERC721("Membership", "MEMBER") {
+        _setRoleAdmin(CORE_DELEGATE_ROLE, DEFAULT_ADMIN_ROLE); // Only the swissDAO multisig wallet can grant the core delegate role/guild.
+        _setRoleAdmin(COMMUNITY_MANAGER_ROLE, CORE_DELEGATE_ROLE); // Only core delegates can assign roles/guilds.
+        _setRoleAdmin(EVENT_MANAGER_ROLE, CORE_DELEGATE_ROLE); // Only core delegates can assign roles/guilds.
+        _setRoleAdmin(PROJECT_MANAGER_ROLE, CORE_DELEGATE_ROLE); // Only core delegates can assign roles/guilds.
+        _setRoleAdmin(TREASURY_MANAGER_ROLE, CORE_DELEGATE_ROLE); // Only core delegates can assign roles/guilds.
+        _setRoleAdmin(DEVELOPER_ROLE, CORE_DELEGATE_ROLE); // Only core delegates can assign roles/guilds.
+
+        _grantRole(DEFAULT_ADMIN_ROLE, _defaultAdminRoler); // swissDAO mutlisig wallet address
+        _grantRole(CORE_DELEGATE_ROLE, _coreDelegateRoler); // swissDAO mutlisig wallet address
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -80,6 +107,13 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
     function setDefaultAdminRole(address _multisig) external onlyRole(DEFAULT_ADMIN_ROLE) {
         _grantRole(DEFAULT_ADMIN_ROLE, _multisig);
         _revokeRole(DEFAULT_ADMIN_ROLE, msg.sender);
+    }
+
+    /// @notice Update CORE_DELEGATE_ROLE.
+    /// @param _multisig New multisig address.
+    function setCoreDelegateRole(address _multisig) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        _grantRole(CORE_DELEGATE_ROLE, _multisig);
+        _revokeRole(CORE_DELEGATE_ROLE, msg.sender);
     }
 
     /// @notice Stop Minting
