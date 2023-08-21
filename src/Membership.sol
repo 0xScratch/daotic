@@ -54,12 +54,24 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
     /// @dev Struct that contains vital information
     ///      timestamp: Minted Timestamp
     struct TokenStruct {
-        uint256 timestamp;
+        uint256 mintedAt;
+        uint256 joinedAt;
+        uint256 experiencePoints;
+        uint256 activityPoints;
+        address holder;
+        TokenState state;
     }
 
     /*//////////////////////////////////////////////////////////////
                                 ENUMS
     //////////////////////////////////////////////////////////////*/
+
+    enum TokenState {
+        ONBOARDING,
+        ACTIVE,
+        INACTIVE,
+        LABS
+    }
 
     /*//////////////////////////////////////////////////////////////
                                 STORAGE
@@ -67,6 +79,9 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
 
     /// @dev Tracker of tokenIds
     Counters.Counter private s_tokenIds;
+
+    /// @dev Track of all swissDAO Memberships
+    mapping(uint256 _tokenId => TokenStruct _membership) private s_memberships;
 
     /*//////////////////////////////////////////////////////////////
                               CONSTRUCTOR
@@ -99,7 +114,40 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
 
         _mint(msg.sender, _newItemId);
 
+        s_memberships[_newItemId] = TokenStruct({
+            mintedAt: block.timestamp,
+            joinedAt: 0,
+            experiencePoints: 0,
+            activityPoints: 0,
+            holder: msg.sender,
+            state: TokenState.ONBOARDING
+        });
+
         return _newItemId;
+    }
+
+    /*//////////////////////////////////////////////////////////////
+                          ADMIN FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
+    /// @notice Update Membership
+    /// @param _tokenId Id of Membership
+    /// @param _tokenStruct New values for Membership
+    function updateMembership(
+        uint256 _tokenId,
+        TokenStruct memory _tokenStruct
+    )
+        external
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        s_memberships[_tokenId] = TokenStruct({
+            mintedAt: _tokenStruct.mintedAt,
+            joinedAt: _tokenStruct.joinedAt,
+            experiencePoints: _tokenStruct.experiencePoints,
+            activityPoints: _tokenStruct.activityPoints,
+            holder: _tokenStruct.holder,
+            state: _tokenStruct.state
+        });
     }
 
     /// @notice Update DEFAULT_ADMIN_ROLE.
