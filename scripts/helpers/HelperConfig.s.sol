@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.18;
 
-import {Script} from "@std/Script.sol";
+import { Script } from "@std/Script.sol";
 
 contract HelperConfig is Script {
     NetworkConfig public activeNetworkConfig;
@@ -11,7 +11,7 @@ contract HelperConfig is Script {
     }
 
     constructor() {
-        if (block.chainid == 11155111) {
+        if (block.chainid == 11_155_111) {
             activeNetworkConfig = getSepoliaEthConfig();
         } else {
             activeNetworkConfig = getOrCreateAnvilEthConfig();
@@ -21,7 +21,7 @@ contract HelperConfig is Script {
     function getSepoliaEthConfig() public pure returns (NetworkConfig memory sepoliaNetworkConfig) {
         sepoliaNetworkConfig = NetworkConfig({
             priceFeed: 0x694AA1769357215DE4FAC081bf1f309aDC325306 // ETH / USD
-        });
+         });
     }
 
     function getOrCreateAnvilEthConfig() public returns (NetworkConfig memory anvilNetworkConfig) {
@@ -33,6 +33,6 @@ contract HelperConfig is Script {
         /// Deploy Mock Contracts
         vm.stopBroadcast();
 
-        anvilNetworkConfig = NetworkConfig({priceFeed: address(0)});
+        anvilNetworkConfig = NetworkConfig({ priceFeed: address(0) });
     }
 }
