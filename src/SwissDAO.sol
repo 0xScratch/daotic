@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: Proprietary
 pragma solidity ^0.8.18;
 
-import {AccessControl} from "@oz/access/AccessControl.sol";
-import {ERC1155} from "@oz/token/ERC1155/ERC1155.sol";
-import {Strings} from "@oz/utils/Strings.sol";
+import { AccessControl } from "@oz/access/AccessControl.sol";
+import { ERC1155 } from "@oz/token/ERC1155/ERC1155.sol";
+import { Strings } from "@oz/utils/Strings.sol";
 
 contract SwissDAO is ERC1155, AccessControl {
     /*//////////////////////////////////////////////////////////////
@@ -50,7 +50,10 @@ contract SwissDAO is ERC1155, AccessControl {
 
     /// @notice Explain to a developer any extra details
     /// @dev Explain to a developer any extra details
-    constructor(address _defaultAdminRoler, address _coreDelegateRoler)
+    constructor(
+        address _defaultAdminRoler,
+        address _coreDelegateRoler
+    )
         ERC1155("https://swissdao.space/api/item/{id}.json")
     {
         _setRoleAdmin(CORE_DELEGATE_ROLE, DEFAULT_ADMIN_ROLE); // Only the swissDAO multisig wallet can grant the core delegate role/guild.
@@ -109,7 +112,10 @@ contract SwissDAO is ERC1155, AccessControl {
         uint256[] memory _ids,
         uint256[] memory _amounts,
         bytes memory _data
-    ) internal override(ERC1155) {
+    )
+        internal
+        override(ERC1155)
+    {
         if (_from != address(0)) {
             revert SwissDAO_SoulboundTokenError();
         }

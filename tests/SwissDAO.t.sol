@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.18;
 
-import {Test} from "@std/Test.sol";
-import {Strings} from "@oz/utils/Strings.sol";
+import { Test } from "@std/Test.sol";
+import { Strings } from "@oz/utils/Strings.sol";
 
-import {Constants} from "../helpers/Constants.sol";
+import { Constants } from "../helpers/Constants.sol";
 
-import {SwissDAO} from "../src/SwissDAO.sol";
+import { SwissDAO } from "../src/SwissDAO.sol";
 
 /// @title Test for {SwissDAO}
 /// @author swissdao.space (https://github.com/swissDAO)
