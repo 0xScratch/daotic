@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.18;
 
-import {ERC20} from "@oz/token/ERC20/ERC20.sol";
-import {Ownable} from "@oz/access/Ownable.sol";
+import { ERC20 } from "@oz/token/ERC20/ERC20.sol";
+import { Ownable } from "@oz/access/Ownable.sol";
 
 /// @title Token Test Contract
 /// @author Olivier Winkler (https://github.com/owieth)
@@ -81,7 +81,7 @@ contract Token is ERC20, Ownable {
                                CONSTRUCTOR
     //////////////////////////////////////////////////////////////*/
 
-    constructor() ERC20("Token", "TKN") {}
+    constructor() ERC20("Token", "TKN") { }
 
     /*//////////////////////////////////////////////////////////////
                                EXTERNAL
@@ -116,7 +116,7 @@ contract Token is ERC20, Ownable {
 
     /// @notice Explain to an end user what this does
     /// @dev Explain to a developer any extra details
-    function _calculateNumber() internal {}
+    function _calculateNumber() internal { }
 
     /*//////////////////////////////////////////////////////////////
                                PRIVATE
@@ -124,5 +124,5 @@ contract Token is ERC20, Ownable {
 
     /// @notice Explain to an end user what this does
     /// @dev Explain to a developer any extra details
-    function _calculateAmount() private {}
+    function _calculateAmount() private { }
 }
