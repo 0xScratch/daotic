@@ -50,7 +50,12 @@ contract SwissDAO is ERC1155, AccessControl {
 
     /// @notice Explain to a developer any extra details
     /// @dev Explain to a developer any extra details
-    constructor() ERC1155("https://swissdao.space/api/item/{id}.json") {
+    constructor(
+        address _defaultAdminRoler,
+        address _coreDelegateRoler
+    )
+        ERC1155("https://swissdao.space/api/item/{id}.json")
+    {
         _setRoleAdmin(CORE_DELEGATE_ROLE, DEFAULT_ADMIN_ROLE); // Only the swissDAO multisig wallet can grant the core delegate role/guild.
         _setRoleAdmin(COMMUNITY_MANAGER_ROLE, CORE_DELEGATE_ROLE); // Only core delegates can assign roles/guilds.
         _setRoleAdmin(EVENT_MANAGER_ROLE, CORE_DELEGATE_ROLE); // Only core delegates can assign roles/guilds.
@@ -58,8 +63,8 @@ contract SwissDAO is ERC1155, AccessControl {
         _setRoleAdmin(TREASURY_MANAGER_ROLE, CORE_DELEGATE_ROLE); // Only core delegates can assign roles/guilds.
         _setRoleAdmin(DEVELOPER_ROLE, CORE_DELEGATE_ROLE); // Only core delegates can assign roles/guilds.
 
-        _grantRole(DEFAULT_ADMIN_ROLE, 0x0DA0da0DA0Da0dA0dA0Da0Da0DA0dA0da0dA0da0); // swissDAO mutlisig wallet address
-        _grantRole(CORE_DELEGATE_ROLE, 0x0DA0da0DA0Da0dA0dA0Da0Da0DA0dA0da0dA0da0); // swissDAO mutlisig wallet address
+        _grantRole(DEFAULT_ADMIN_ROLE, _defaultAdminRoler); // swissDAO mutlisig wallet address
+        _grantRole(CORE_DELEGATE_ROLE, _coreDelegateRoler); // swissDAO mutlisig wallet address
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -84,6 +89,7 @@ contract SwissDAO is ERC1155, AccessControl {
         ) {
             revert SwissDAO_PermissionError();
         }
+
         _mint(member, EXPERIENCE_POINTS, amount, "");
     }
 
@@ -110,7 +116,7 @@ contract SwissDAO is ERC1155, AccessControl {
         internal
         override(ERC1155)
     {
-        if (_from != address(0) || _to != address(0)) {
+        if (_from != address(0)) {
             revert SwissDAO_SoulboundTokenError();
         }
 
