@@ -25,11 +25,13 @@ library MembershipArt {
         return abi.encodePacked(
             '<svg ',
                 'xmlns="http://www.w3.org/2000/svg" ',
-                'width="500" ',
-                'height="500" ',
+                'width="1000" ',
+                'height="1000" ',
                 'fill="#1E1E1E" ',
                 'stroke="#ffffff"',
             '>',
+                '<rect width="1000" height="1000" fill="#1E1E1E" />',
+                '<rect x="75.5" y="140.5" width="349" height="219" rx="11.5" fill="black" stroke="white" />',
                 _generateContent(_tokenStruct),
             '</svg>'
         );
