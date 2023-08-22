@@ -26,7 +26,7 @@ library MembershipMetadata {
         pure
         returns (string memory)
     {
-        bytes memory _svg = MembershipArt.generateSVG();
+        bytes memory _svg = MembershipArt.generateSVG(_tokenStruct);
         string memory _name = string.concat("Membership #", Strings.toString(_tokenId));
 
         /// forgefmt: disable-start
