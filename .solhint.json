@@ -6,6 +6,7 @@
     "max-line-length": ["error", 120],
     "var-name-mixedcase": "off",
     "func-name-mixedcase": "off",
+    "quotes": "off",
     "func-visibility": [
       "error",
       {
