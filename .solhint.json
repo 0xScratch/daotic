@@ -4,6 +4,7 @@
     "code-complexity": ["error", 8],
     "compiler-version": ["error", ">=0.8.18"],
     "max-line-length": ["error", 120],
+    "quotes": "off",
     "func-visibility": [
       "error",
       {
