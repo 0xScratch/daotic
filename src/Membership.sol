@@ -132,22 +132,18 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
 
     /// @notice Update Membership
     /// @param _tokenId Id of Membership
-    /// @param _tokenStruct New values for Membership
+    /// @param _experiencePoints New value for Member's ExperiencePoints
+    /// @param _activityPoints New value for Member's ActivityPoints
     function updateMembership(
         uint256 _tokenId,
-        TokenStruct memory _tokenStruct
+        uint256 _experiencePoints,
+        uint256 _activityPoints
     )
         external
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
-        s_memberships[_tokenId] = TokenStruct({
-            mintedAt: _tokenStruct.mintedAt,
-            joinedAt: _tokenStruct.joinedAt,
-            experiencePoints: _tokenStruct.experiencePoints,
-            activityPoints: _tokenStruct.activityPoints,
-            holder: _tokenStruct.holder,
-            state: _tokenStruct.state
-        });
+        s_memberships[_tokenId].experiencePoints = _experiencePoints;
+        s_memberships[_tokenId].activityPoints = _activityPoints;
     }
 
     /// @notice Update DEFAULT_ADMIN_ROLE.
