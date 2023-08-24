@@ -16,6 +16,14 @@ contract MembershipTest is Test {
         s_membership = new Membership(DEFAULT_ADMIN_ADDRESS, address(2));
     }
 
+    function test_ShouldRevertMintIfAlreadyMember() public {
+        uint256 _tokenId = s_membership.mint();
+        assertEq(_tokenId, s_membership.totalSupply());
+
+        vm.expectRevert(abi.encodeWithSignature("Membership__YouAlreadyAreMember()"));
+        s_membership.mint();
+    }
+
     function test_Mint() public {
         uint256 _tokenId = s_membership.mint();
         s_membership.tokenURI(_tokenId);
