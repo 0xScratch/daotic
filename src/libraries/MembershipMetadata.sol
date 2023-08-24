@@ -71,11 +71,11 @@ library MembershipMetadata {
     /// @return Returns base64 encoded attributes.
     function _getAttributes(Membership.TokenStruct memory _tokenStruct) internal pure returns (bytes memory) {
         return abi.encodePacked(
-            _getTrait("Holder", Strings.toHexString(_tokenStruct.holder), ""),
-            _getTrait("Minted", Strings.toHexString(_tokenStruct.mintedAt), ""),
-            _getTrait("Joined", Strings.toHexString(_tokenStruct.joinedAt), ""),
-            _getTrait("Experience Points", Strings.toHexString(_tokenStruct.experiencePoints), ""),
-            _getTrait("Activity Points", Strings.toHexString(_tokenStruct.activityPoints), ""),
+            _getTrait("Holder", Strings.toHexString(_tokenStruct.holder), ","),
+            _getTrait("Minted", Strings.toHexString(_tokenStruct.mintedAt), ","),
+            _getTrait("Joined", Strings.toHexString(_tokenStruct.joinedAt), ","),
+            _getTrait("Experience Points", Strings.toHexString(_tokenStruct.experiencePoints), ","),
+            _getTrait("Activity Points", Strings.toHexString(_tokenStruct.activityPoints), ","),
             _getTrait("State", "ONBOARDING", "")
         );
     }
