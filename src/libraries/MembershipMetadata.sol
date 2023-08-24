@@ -13,6 +13,13 @@ import { Membership } from "../Membership.sol";
 /// @custom:security-contact dev@swissdao.space
 library MembershipMetadata {
     /*//////////////////////////////////////////////////////////////
+                              CONSTANTS
+    //////////////////////////////////////////////////////////////*/
+
+    /// @dev Animated NFT URI
+    string private constant ANIMATION_TOKEN_URI_PREFIX = "https://www.swissdao.space/membercard/";
+
+    /*//////////////////////////////////////////////////////////////
                                 PUBLIC
     //////////////////////////////////////////////////////////////*/
 
@@ -29,6 +36,8 @@ library MembershipMetadata {
         bytes memory _svg = MembershipArt.generateSVG(_tokenStruct);
         string memory _name = string.concat("Membership #", Strings.toString(_tokenId));
 
+        string memory _holder = Strings.toHexString(_tokenStruct.holder);
+
         /// forgefmt: disable-start
         bytes memory _metadata = abi.encodePacked(
             "{",
@@ -36,11 +45,14 @@ library MembershipMetadata {
                 _name,
                 '",',
                 '"description": "',
-                string.concat("Membership of", Strings.toHexString(_tokenStruct.holder), '",'),
+                string.concat("Membership of", _holder, '",'),
                 '"image": ',
                     '"data:image/svg+xml;base64,',
                     Base64.encode(_svg),
                     '",',
+                '"animation_url": "',
+                string.concat(ANIMATION_TOKEN_URI_PREFIX, _holder),
+                '",',
                 '"attributes": [', 
                     _getAttributes(_tokenStruct),
                 "]",
