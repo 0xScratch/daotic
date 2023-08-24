@@ -25,6 +25,9 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
                                 ERRORS
     //////////////////////////////////////////////////////////////*/
 
+    /// @dev Thrown if account already has membership
+    error Membership_YouAlreadyAreMember();
+
     /*//////////////////////////////////////////////////////////////
                                 CONSTANTS
     //////////////////////////////////////////////////////////////*/
@@ -109,6 +112,10 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
     /// @notice Mint Membership
     /// @return Returns new tokenId
     function mint() external payable whenNotPaused returns (uint256) {
+        if (balanceOf(msg.sender) != 0) {
+            revert Membership_YouAlreadyAreMember();
+        }
+
         s_tokenIds.increment();
         uint256 _newItemId = s_tokenIds.current();
 
