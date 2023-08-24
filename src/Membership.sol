@@ -108,7 +108,7 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
 
     /// @notice Mint Membership
     /// @return Returns new tokenId
-    function mint() external payable whenNotPaused returns (uint256) {
+    function mint() external whenNotPaused returns (uint256) {
         s_tokenIds.increment();
         uint256 _newItemId = s_tokenIds.current();
 
