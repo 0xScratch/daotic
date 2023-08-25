@@ -56,9 +56,6 @@ contract SwissDAO is ERC1155, AccessControl {
     //////////////////////////////////////////////////////////////*/
 
     address[] public s_members;
-    function numberOfMembers() public view returns (uint) {
-        return s_members.length;
-    }
 
     /*//////////////////////////////////////////////////////////////
                                CONSTRUCTOR
@@ -87,6 +84,7 @@ contract SwissDAO is ERC1155, AccessControl {
     /*//////////////////////////////////////////////////////////////
                                PUBLIC
     //////////////////////////////////////////////////////////////*/
+
 
     /// @notice Explain to a developer any extra details
     /// @dev Explain to a developer any extra details
@@ -200,6 +198,10 @@ contract SwissDAO is ERC1155, AccessControl {
         _grantRole(COMMUNITY_MEMBER_ROLE, member);
     }
 
+    /// This function returns the number of onboarded members.
+    function numberOfMembers() public view returns (uint256) {
+        return s_members.length;
+    }
 
     /*//////////////////////////////////////////////////////////////
                                INTERNAL
