@@ -61,7 +61,9 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
         uint256 joinedAt;
         uint256 experiencePoints;
         uint256 activityPoints;
+        uint256 attendedEvents;
         address holder;
+        string profileImageUri;
         TokenState state;
     }
 
@@ -126,7 +128,9 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
             joinedAt: 0,
             experiencePoints: 0,
             activityPoints: 0,
+            attendedEvents: 1,
             holder: msg.sender,
+            profileImageUri: "",
             state: TokenState.ONBOARDING
         });
 
