@@ -55,9 +55,9 @@ contract SwissDAO is ERC1155, AccessControl {
                               STORAGE
     //////////////////////////////////////////////////////////////*/
 
-    address[] public membersLUP;
+    address[] public s_members;
     function numberOfMembers() public view returns (uint) {
-        return membersLUP.length;
+        return s_members.length;
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -171,9 +171,9 @@ contract SwissDAO is ERC1155, AccessControl {
             revert SwissDAO_PermissionError();
         }
 
-        for(uint i=0; i<membersLUP.length; i++){
-            if(balanceOf(membersLUP[i], ACTIVITY_POINTS)>0){
-                _burn(membersLUP[i], ACTIVITY_POINTS, 1);
+        for(uint i=0; i<s_members.length; i++){
+            if(balanceOf(s_members[i], ACTIVITY_POINTS)>0){
+                _burn(s_members[i], ACTIVITY_POINTS, 1);
             }
         }
     }
@@ -193,7 +193,7 @@ contract SwissDAO is ERC1155, AccessControl {
             revert SwissDAO_OnboardingError();
         }
 
-        membersLUP.push(member);
+        s_members.push(member);
         _mint(member, EXPERIENCE_POINTS, 1, "");
         _mint(member, ACTIVITY_POINTS, 1, "");
         _mint(member, membershipId, 1, "");
