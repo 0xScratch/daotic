@@ -108,7 +108,7 @@ contract SwissDAO is ERC1155, AccessControl {
         }else{
             address member = address(uint160(_tokenid)); // membership NFT tokens inherit their id from their owners address
             uint256 xp = balanceOf(member, EXPERIENCE_POINTS);
-            uint256 ap = balanceOf(member, 2);
+            uint256 ap = balanceOf(member, ACTIVITY_POINTS);
             // bool hasDeveloperRole = hasRole(DEVELOPER_ROLE, member);
             // bool hasProjectManagerRole = hasRole(PROJECT_MANAGER_ROLE, member);
 
