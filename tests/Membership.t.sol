@@ -33,17 +33,8 @@ contract MembershipTest is Test {
         uint256 _tokenId = s_membership.mint();
         s_membership.tokenURI(_tokenId);
 
-        Membership.TokenStruct memory _tokenStruct = Membership.TokenStruct({
-            mintedAt: block.timestamp,
-            joinedAt: block.timestamp,
-            experiencePoints: 100,
-            activityPoints: 50,
-            holder: msg.sender,
-            state: Membership.TokenState.ACTIVE
-        });
-
         vm.prank(DEFAULT_ADMIN_ADDRESS);
-        s_membership.updateMembership(_tokenId, _tokenStruct);
+        s_membership.updateMembership(_tokenId, 100, 50);
 
         s_membership.tokenURI(_tokenId);
     }
