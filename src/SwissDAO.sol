@@ -111,17 +111,23 @@ contract SwissDAO is ERC1155, AccessControl {
             uint256 ap = balanceOf(member, ACTIVITY_POINTS);
             // bool hasDeveloperRole = hasRole(DEVELOPER_ROLE, member);
             // bool hasProjectManagerRole = hasRole(PROJECT_MANAGER_ROLE, member);
-            
+
             _svg = abi.encodePacked(
                 '<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000" fill="#1E1E1E" stroke="#ffffff"> <rect width="1000" height="1000" fill="#1E1E1E" /><rect x="75.5" y="140.5" width="349" height="219" rx="11.5" fill="black" stroke="white" />',
                 '<text fill="white" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="24" letter-spacing="-0.04em"><tspan x="104" y="187">Holder</tspan></text>',
-                '<text fill="white" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="24" letter-spacing="-0.04em"><tspan x="250" y="187">', Strings.toHexString(member),'</tspan></text>',
+                '<text fill="white" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="24" letter-spacing="-0.04em"><tspan x="250" y="187">',
+                Strings.toHexString(member),
+                "</tspan></text>",
                 '<text fill="white" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="24" letter-spacing="-0.04em"><tspan x="104" y="225">AP</tspan></text>',
-                '<text fill="white" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="24" letter-spacing="-0.04em"><tspan x="250" y="225">', Strings.toString(ap),'</tspan></text>',
+                '<text fill="white" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="24" letter-spacing="-0.04em"><tspan x="250" y="225">',
+                Strings.toString(ap),
+                "</tspan></text>",
                 '<text fill="white" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="24" letter-spacing="-0.04em"><tspan x="104" y="265">XP</tspan></text>',
-                '<text fill="white" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="24" letter-spacing="-0.04em"><tspan x="250" y="265">', Strings.toString(xp),'</tspan></text></svg>'
+                '<text fill="white" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="24" letter-spacing="-0.04em"><tspan x="250" y="265">',
+                Strings.toString(xp),
+                "</tspan></text></svg>"
             );
-            
+
             _name = "Membership";
             _description = "swissDAO Membership";
         }
