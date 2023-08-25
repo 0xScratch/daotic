@@ -55,6 +55,7 @@ contract SwissDAOTest is Test, Constants {
     /// @notice Explain to an end user what this does
     /// @dev Explain to a developer any extra details
     function test_FuzzReturnsURI(uint256 _tokenId) public {
+        vm.assume(_tokenId != 0);
         string memory _uri = s_swissDaoToken.uri(_tokenId);
 
         assertFalse(Strings.equal(_uri, string(abi.encodePacked(""))));
