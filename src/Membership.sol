@@ -28,6 +28,9 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
     /// @dev Thrown if account already has membership
     error Membership__YouAlreadyAreMember();
 
+    /// @dev Thrown if msg.sender is not owner of nft
+    error Membership__YouDontOwnThisMembership(uint256 _tokenId);
+
     /*//////////////////////////////////////////////////////////////
                                 CONSTANTS
     //////////////////////////////////////////////////////////////*/
@@ -89,6 +92,19 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
     mapping(uint256 _tokenId => TokenStruct _membership) private s_memberships;
 
     /*//////////////////////////////////////////////////////////////
+                                MODIFIERS
+    //////////////////////////////////////////////////////////////*/
+
+    /// @dev Checks if the owner of the token is msg.sender
+    /// @param _tokenId TokenId
+    modifier onlyTokenOwner(uint256 _tokenId) {
+        if (ownerOf(_tokenId) != msg.sender) {
+            revert Membership__YouDontOwnThisMembership(_tokenId);
+        }
+        _;
+    }
+
+    /*//////////////////////////////////////////////////////////////
                               CONSTRUCTOR
     //////////////////////////////////////////////////////////////*/
 
@@ -135,6 +151,12 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
         });
 
         return _newItemId;
+    }
+
+    /// @notice Update tokens profile image uri
+    /// @dev Can only be called by NFT Owner
+    function updateProfileImageUri(uint256 _tokenId, string memory _newUri) external onlyTokenOwner(_tokenId) {
+        s_memberships[_tokenId].profileImageUri = _newUri;
     }
 
     /*//////////////////////////////////////////////////////////////
