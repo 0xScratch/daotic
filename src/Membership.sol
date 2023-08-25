@@ -185,6 +185,12 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
                                 PUBLIC
     //////////////////////////////////////////////////////////////*/
 
+    /// @notice Get function for tokenstruct of tokenid
+    /// @return TokenStruct
+    function getTokenStructById(uint256 _tokenId) public view returns (TokenStruct memory) {
+        return s_memberships[_tokenId];
+    }
+
     /*//////////////////////////////////////////////////////////////
                             INTERNAL OVERRIDES
     //////////////////////////////////////////////////////////////*/
