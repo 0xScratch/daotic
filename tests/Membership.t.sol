@@ -49,6 +49,26 @@ contract MembershipTest is Test {
         assertEq(_newUri, s_membership.getTokenStructById(_tokenId).profileImageUri);
     }
 
+    function test_ShouldRevertIncreaseEventAttendanceIfNotAdmin() public {
+        uint256 _tokenId = s_membership.mint();
+
+        assertEq(s_membership.getTokenStructById(_tokenId).attendedEvents, 1);
+
+        vm.expectRevert();
+        s_membership.increaseEventAttendance(_tokenId);
+    }
+
+    function test_IncreaseEventAttendanceIfNotAdmin() public {
+        uint256 _tokenId = s_membership.mint();
+
+        assertEq(s_membership.getTokenStructById(_tokenId).attendedEvents, 1);
+
+        vm.prank(DEFAULT_ADMIN_ADDRESS);
+        s_membership.increaseEventAttendance(_tokenId);
+
+        assertEq(s_membership.getTokenStructById(_tokenId).attendedEvents, 2);
+    }
+
     function test_Upgrade() public {
         uint256 _tokenId = s_membership.mint();
         s_membership.tokenURI(_tokenId);

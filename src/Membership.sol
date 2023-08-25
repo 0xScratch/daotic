@@ -179,6 +179,12 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
         s_memberships[_tokenId].activityPoints = _activityPoints;
     }
 
+    /// @notice Increase count of attended Events
+    /// @param _tokenId Id of Membership
+    function increaseEventAttendance(uint256 _tokenId) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        s_memberships[_tokenId].attendedEvents += 1;
+    }
+
     /// @notice Update DEFAULT_ADMIN_ROLE.
     /// @param _multisig New multisig address.
     function setDefaultAdminRole(address _multisig) external onlyRole(DEFAULT_ADMIN_ROLE) {
