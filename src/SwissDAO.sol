@@ -52,7 +52,7 @@ contract SwissDAO is ERC1155, AccessControl {
     bytes32 public constant COMMUNITY_MEMBER_ROLE = keccak256("COMMUNITY_MEMBER_ROLE");
 
     /*//////////////////////////////////////////////////////////////
-                              LOOK UP TABLES
+                              STORAGE
     //////////////////////////////////////////////////////////////*/
 
     address[] public membersLUP;
