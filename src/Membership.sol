@@ -28,6 +28,9 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
     /// @dev Thrown if account already has membership
     error Membership__YouAlreadyAreMember();
 
+    /// @dev Thrown if msg.sender is not owner of nft
+    error Membership__YouDontOwnThisMembership(uint256 _tokenId);
+
     /*//////////////////////////////////////////////////////////////
                                 CONSTANTS
     //////////////////////////////////////////////////////////////*/
@@ -61,7 +64,9 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
         uint256 joinedAt;
         uint256 experiencePoints;
         uint256 activityPoints;
+        uint256 attendedEvents;
         address holder;
+        string profileImageUri;
         TokenState state;
     }
 
@@ -85,6 +90,19 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
 
     /// @dev Track of all swissDAO Memberships
     mapping(uint256 _tokenId => TokenStruct _membership) private s_memberships;
+
+    /*//////////////////////////////////////////////////////////////
+                                MODIFIERS
+    //////////////////////////////////////////////////////////////*/
+
+    /// @dev Checks if the owner of the token is msg.sender
+    /// @param _tokenId TokenId
+    modifier onlyTokenOwner(uint256 _tokenId) {
+        if (ownerOf(_tokenId) != msg.sender) {
+            revert Membership__YouDontOwnThisMembership(_tokenId);
+        }
+        _;
+    }
 
     /*//////////////////////////////////////////////////////////////
                               CONSTRUCTOR
@@ -126,11 +144,19 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
             joinedAt: 0,
             experiencePoints: 0,
             activityPoints: 0,
+            attendedEvents: 1,
             holder: msg.sender,
+            profileImageUri: "",
             state: TokenState.ONBOARDING
         });
 
         return _newItemId;
+    }
+
+    /// @notice Update tokens profile image uri
+    /// @dev Can only be called by NFT Owner
+    function updateProfileImageUri(uint256 _tokenId, string memory _newUri) external onlyTokenOwner(_tokenId) {
+        s_memberships[_tokenId].profileImageUri = _newUri;
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -151,6 +177,12 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
     {
         s_memberships[_tokenId].experiencePoints = _experiencePoints;
         s_memberships[_tokenId].activityPoints = _activityPoints;
+    }
+
+    /// @notice Increase count of attended Events
+    /// @param _tokenId Id of Membership
+    function increaseEventAttendance(uint256 _tokenId) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        s_memberships[_tokenId].attendedEvents += 1;
     }
 
     /// @notice Update DEFAULT_ADMIN_ROLE.
@@ -180,6 +212,12 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
     /*//////////////////////////////////////////////////////////////
                                 PUBLIC
     //////////////////////////////////////////////////////////////*/
+
+    /// @notice Get function for tokenstruct of tokenid
+    /// @return TokenStruct
+    function getTokenStructById(uint256 _tokenId) public view returns (TokenStruct memory) {
+        return s_memberships[_tokenId];
+    }
 
     /*//////////////////////////////////////////////////////////////
                             INTERNAL OVERRIDES
