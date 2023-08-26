@@ -88,12 +88,7 @@ contract SwissDAO is ERC1155, AccessControl {
 
     /// @notice Explain to a developer any extra details
     /// @dev Explain to a developer any extra details
-    constructor(
-        address _defaultAdminRoler,
-        address _coreDelegateRoler
-    )
-        ERC1155("")
-    {
+    constructor(address _defaultAdminRoler, address _coreDelegateRoler) ERC1155("") {
         name = "swissDAO";
         _setRoleAdmin(CORE_DELEGATE_ROLE, DEFAULT_ADMIN_ROLE); // Only the swissDAO multisig wallet can grant the core delegate role/guild.
         _setRoleAdmin(COMMUNITY_MANAGER_ROLE, CORE_DELEGATE_ROLE); // Only core delegates can assign roles/guilds.
@@ -149,7 +144,6 @@ contract SwissDAO is ERC1155, AccessControl {
             // uint256 joinedAt = Strings.toHexString(s_memberStructs[member].joinedAt); // add later
             // string profileImageUri s_memberStructs[member].profileImageUri; // add later
 
-
             _svg = abi.encodePacked(
                 '<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000" fill="#1E1E1E" stroke="#ffffff"> <rect width="1000" height="1000" fill="#1E1E1E" /><rect x="75.5" y="140.5" width="349" height="219" rx="11.5" fill="black" stroke="white" />',
                 '<text fill="white" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="24" letter-spacing="-0.04em"><tspan x="104" y="187">Holder</tspan></text>',
@@ -169,7 +163,15 @@ contract SwissDAO is ERC1155, AccessControl {
             _name = s_memberStructs[member].nickname;
             _description = "swissDAO Membership";
             _animation_url = string.concat(ANIMATION_TOKEN_URI_PREFIX, Strings.toHexString(member));
-            _attributes = string(abi.encodePacked('[{ "trait_type": "Experience Points", "value": "', xp, ' "}, { "trait_type": "Activity Points", "value": "', ap, '"}]'));
+            _attributes = string(
+                abi.encodePacked(
+                    '[{ "trait_type": "Experience Points", "value": "',
+                    xp,
+                    ' "}, { "trait_type": "Activity Points", "value": "',
+                    ap,
+                    '"}]'
+                )
+            );
         }
 
         bytes memory _metadata = abi.encodePacked(
@@ -185,8 +187,7 @@ contract SwissDAO is ERC1155, AccessControl {
             Base64.encode(_svg),
             '",',
             '"animation_url": "',
-            _animation_url
-            ,
+            _animation_url,
             '", ',
             '"attributes": ',
             _attributes,
@@ -210,7 +211,7 @@ contract SwissDAO is ERC1155, AccessControl {
         uint256 topUp = amount <= maxTopUp ? amount : maxTopUp;
         if (topUp != 0) {
             _mint(member, ACTIVITY_POINTS, topUp, "");
-        }        
+        }
     }
 
     /// This function decreases activity points for all members by one. Only core delegates or community manegers can increase experience points.
