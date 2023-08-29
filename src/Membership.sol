@@ -146,7 +146,7 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
             activityPoints: 0,
             attendedEvents: 1,
             holder: msg.sender,
-            profileImageUri: "",
+            profileImageUri: "https://picsum.photos/500",
             state: TokenState.ONBOARDING
         });
 
