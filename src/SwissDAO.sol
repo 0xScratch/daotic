@@ -122,12 +122,16 @@ contract SwissDAO is ERC1155, AccessControl {
             );
             _name = "XP";
             _description = "Experience Point";
+            _animation_url = "";
+            _attributes = "[]";
         } else if (_tokenid == 2) {
             _svg = abi.encodePacked(
                 '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="visual" viewBox="0 0 1000 1000" width="1000" height="1000" version="1.1"><rect x="0" y="0" width="1000" height="1000" fill="#001122"/><path d="M0 838L143 716L286 631L429 765L571 726L714 745L857 760L1000 652L1000 1001L857 1001L714 1001L571 1001L429 1001L286 1001L143 1001L0 1001Z" fill="#C62368" stroke-linecap="square" stroke-linejoin="bevel"/><text fill="white" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="500" letter-spacing="-0.04em" x="200" y="600">AP</text></svg>'
             );
             _name = "AP";
             _description = "Activity Point";
+            _animation_url = "";
+            _attributes = "[]";
         } else if (_tokenid == 3) {
             _svg = abi.encodePacked(
                 '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="visual" viewBox="0 0 1000 1000" width="1000" height="1000" version="1.1"><rect x="0" y="0" width="1000" height="1000" fill="#001122"/><path d="M0 838L143 716L286 631L429 765L571 726L714 745L857 760L1000 652L1000 1001L857 1001L714 1001L571 1001L429 1001L286 1001L143 1001L0 1001Z" fill="#C62368" stroke-linecap="square" stroke-linejoin="bevel"/><text fill="white" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="160" letter-spacing="-0.04em" x="200" y="500">EVENTS</text></svg>'
@@ -138,7 +142,7 @@ contract SwissDAO is ERC1155, AccessControl {
             address member = address(uint160(_tokenid)); // membership NFT tokens inherit their id from their owners address
             string memory xp = LibString.toString(balanceOf(member, EXPERIENCE_POINTS));
             string memory ap = LibString.toString(balanceOf(member, ACTIVITY_POINTS));
-            // uint256 ae = balanceOf(member, ATTENDED_EVENTS); // add later
+            string memory ae = LibString.toString(balanceOf(member, ATTENDED_EVENTS));
             // bool hasDeveloperRole = hasRole(DEVELOPER_ROLE, member); // add later
             // bool hasProjectManagerRole = hasRole(PROJECT_MANAGER_ROLE, member); // add later
             // uint256 joinedAt = LibString.toHexString(s_memberStructs[member].joinedAt); // add later
@@ -169,6 +173,8 @@ contract SwissDAO is ERC1155, AccessControl {
                     xp,
                     ' "}, { "trait_type": "Activity Points", "value": "',
                     ap,
+                    '"}, { "trait_type": "Attended Events", "value": "',
+                    ae,
                     '"}]'
                 )
             );
@@ -191,7 +197,7 @@ contract SwissDAO is ERC1155, AccessControl {
             '", ',
             '"attributes": ',
             _attributes,
-            "}"
+            '}'
         );
         return string(abi.encodePacked("data:application/json;base64,", Base64.encode(_metadata)));
     }
