@@ -2,12 +2,16 @@
 pragma solidity ^0.8.18;
 
 import { Test } from "@std/Test.sol";
+
+import { AccessControlHelper } from "../helpers/AccessControlHelper.sol";
+import { Constants } from "../helpers/Constants.sol";
+
 import { Membership } from "../src/Membership.sol";
 
 /// @title Test for {Membership}
 /// @author Olivier Winkler (https://github.com/owieth)
 /// @custom:security-contact xxx@gmail.com
-contract MembershipTest is Test {
+contract MembershipTest is Test, AccessControlHelper, Constants {
     address private constant DEFAULT_ADMIN_ADDRESS = address(100);
 
     Membership public s_membership;
@@ -54,7 +58,8 @@ contract MembershipTest is Test {
 
         assertEq(s_membership.getTokenStructById(_tokenId).attendedEvents, 1);
 
-        vm.expectRevert();
+        vm.prank(DEFAULT_SENDER);
+        vm.expectRevert(getAccessControlRevertMessage(DEFAULT_SENDER, vm.toString(DEFAULT_ADMIN_ROLE)));
         s_membership.increaseEventAttendance(_tokenId);
     }
 
@@ -74,7 +79,8 @@ contract MembershipTest is Test {
     //////////////////////////////////////////////////////////////*/
 
     function test_ShouldRevertSetAnimationTokenUriPrefix() public {
-        vm.expectRevert();
+        vm.prank(DEFAULT_SENDER);
+        vm.expectRevert(getAccessControlRevertMessage(DEFAULT_SENDER, vm.toString(DEFAULT_ADMIN_ROLE)));
         s_membership.setAnimationTokenUriPrefix("");
     }
 

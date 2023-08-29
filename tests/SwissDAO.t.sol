@@ -4,6 +4,7 @@ pragma solidity ^0.8.18;
 import { Test } from "@std/Test.sol";
 import { LibString } from "@solady/utils/LibString.sol";
 
+import { AccessControlHelper } from "../helpers/AccessControlHelper.sol";
 import { Constants } from "../helpers/Constants.sol";
 
 import { SwissDAO } from "../src/SwissDAO.sol";
@@ -11,7 +12,7 @@ import { SwissDAO } from "../src/SwissDAO.sol";
 /// @title Test for {SwissDAO}
 /// @author swissdao.space (https://github.com/swissDAO)
 /// @custom:security-contact xxx@gmail.com
-contract SwissDAOTest is Test, Constants {
+contract SwissDAOTest is Test, AccessControlHelper, Constants {
     /*//////////////////////////////////////////////////////////////
                                  STORAGE
     //////////////////////////////////////////////////////////////*/
@@ -71,7 +72,7 @@ contract SwissDAOTest is Test, Constants {
         address _sender = address(10);
 
         vm.prank(_sender);
-        vm.expectRevert();
+        vm.expectRevert(abi.encodeWithSignature("SwissDAO_PermissionError()"));
         s_swissDaoToken.increasePoints(_sender, 10);
     }
 
@@ -79,7 +80,7 @@ contract SwissDAOTest is Test, Constants {
     /// @dev Explain to a developer any extra details
     function test_FuzzShouldRevertIncreasePoints(address _sender) public {
         vm.prank(_sender);
-        vm.expectRevert();
+        vm.expectRevert(abi.encodeWithSignature("SwissDAO_PermissionError()"));
         s_swissDaoToken.increasePoints(_sender, 10);
     }
 
