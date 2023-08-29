@@ -2,7 +2,7 @@
 pragma solidity ^0.8.18;
 
 import { Test } from "@std/Test.sol";
-import { Strings } from "@oz/utils/Strings.sol";
+import { LibString } from "@solady/utils/LibString.sol";
 
 import { Constants } from "../helpers/Constants.sol";
 
@@ -49,7 +49,7 @@ contract SwissDAOTest is Test, Constants {
         uint256 _tokenId = 1;
         string memory _uri = s_swissDaoToken.uri(_tokenId);
 
-        assertFalse(Strings.equal(_uri, string(abi.encodePacked(""))));
+        assertFalse(LibString.eq(_uri, string(abi.encodePacked(""))));
     }
 
     /// @notice Explain to an end user what this does
@@ -58,7 +58,7 @@ contract SwissDAOTest is Test, Constants {
         vm.assume(_tokenId != 0);
         string memory _uri = s_swissDaoToken.uri(_tokenId);
 
-        assertFalse(Strings.equal(_uri, string(abi.encodePacked(""))));
+        assertFalse(LibString.eq(_uri, string(abi.encodePacked(""))));
     }
 
     /*//////////////////////////////////////////////////////////////

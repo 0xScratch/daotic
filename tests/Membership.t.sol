@@ -69,6 +69,20 @@ contract MembershipTest is Test {
         assertEq(s_membership.getTokenStructById(_tokenId).attendedEvents, 2);
     }
 
+    /*//////////////////////////////////////////////////////////////
+                          ADMIN FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
+    function test_ShouldRevertSetAnimationTokenUriPrefix() public {
+        vm.expectRevert();
+        s_membership.setAnimationTokenUriPrefix("");
+    }
+
+    function test_SetAnimationTokenUriPrefix() public {
+        vm.prank(DEFAULT_ADMIN_ADDRESS);
+        s_membership.setAnimationTokenUriPrefix("");
+    }
+
     function test_Upgrade() public {
         uint256 _tokenId = s_membership.mint();
         s_membership.tokenURI(_tokenId);

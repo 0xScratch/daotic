@@ -3,8 +3,8 @@ pragma solidity ^0.8.18;
 
 import { AccessControl } from "@oz/access/AccessControl.sol";
 import { ERC1155 } from "@oz/token/ERC1155/ERC1155.sol";
-import { Strings } from "@oz/utils/Strings.sol";
 import { Base64 } from "@oz/utils/Base64.sol";
+import { LibString } from "@solady/utils/LibString.sol";
 
 contract SwissDAO is ERC1155, AccessControl {
     /*//////////////////////////////////////////////////////////////
@@ -136,19 +136,19 @@ contract SwissDAO is ERC1155, AccessControl {
             _description = "Attended Events";
         } else {
             address member = address(uint160(_tokenid)); // membership NFT tokens inherit their id from their owners address
-            string memory xp = Strings.toString(balanceOf(member, EXPERIENCE_POINTS));
-            string memory ap = Strings.toString(balanceOf(member, ACTIVITY_POINTS));
+            string memory xp = LibString.toString(balanceOf(member, EXPERIENCE_POINTS));
+            string memory ap = LibString.toString(balanceOf(member, ACTIVITY_POINTS));
             // uint256 ae = balanceOf(member, ATTENDED_EVENTS); // add later
             // bool hasDeveloperRole = hasRole(DEVELOPER_ROLE, member); // add later
             // bool hasProjectManagerRole = hasRole(PROJECT_MANAGER_ROLE, member); // add later
-            // uint256 joinedAt = Strings.toHexString(s_memberStructs[member].joinedAt); // add later
+            // uint256 joinedAt = LibString.toHexString(s_memberStructs[member].joinedAt); // add later
             // string profileImageUri s_memberStructs[member].profileImageUri; // add later
 
             _svg = abi.encodePacked(
                 '<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000" fill="#1E1E1E" stroke="#ffffff"> <rect width="1000" height="1000" fill="#1E1E1E" /><rect x="75.5" y="140.5" width="349" height="219" rx="11.5" fill="black" stroke="white" />',
                 '<text fill="white" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="24" letter-spacing="-0.04em"><tspan x="104" y="187">Holder</tspan></text>',
                 '<text fill="white" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="24" letter-spacing="-0.04em"><tspan x="250" y="187">',
-                Strings.toHexString(member),
+                LibString.toHexString(member),
                 "</tspan></text>",
                 '<text fill="white" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="24" letter-spacing="-0.04em"><tspan x="104" y="225">AP</tspan></text>',
                 '<text fill="white" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="24" letter-spacing="-0.04em"><tspan x="250" y="225">',
@@ -162,7 +162,7 @@ contract SwissDAO is ERC1155, AccessControl {
 
             _name = s_memberStructs[member].nickname;
             _description = "swissDAO Membership";
-            _animation_url = string.concat(ANIMATION_TOKEN_URI_PREFIX, Strings.toHexString(member));
+            _animation_url = string.concat(ANIMATION_TOKEN_URI_PREFIX, LibString.toHexString(member));
             _attributes = string(
                 abi.encodePacked(
                     '[{ "trait_type": "Experience Points", "value": "',
