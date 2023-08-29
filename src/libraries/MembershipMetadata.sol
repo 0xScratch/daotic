@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.18;
 
-import { Strings } from "@oz/utils/Strings.sol";
-import { LibString } from "@solady/utils/LibString.sol";
 import { Base64 } from "@oz/utils/Base64.sol";
+import { LibString } from "@solady/utils/LibString.sol";
 
 import { MembershipArt } from "./MembershipArt.sol";
 import { Membership } from "../Membership.sol";
@@ -29,9 +28,9 @@ library MembershipMetadata {
         returns (string memory)
     {
         bytes memory _svg = MembershipArt.generateSVG(_tokenStruct);
-        string memory _name = string.concat("Membership #", Strings.toString(_tokenId));
+        string memory _name = string.concat("Membership #", LibString.toString(_tokenId));
 
-        string memory _holder = Strings.toHexString(_tokenStruct.holder);
+        string memory _holder = LibString.toHexString(_tokenStruct.holder);
 
         /// forgefmt: disable-start
         bytes memory _metadata = abi.encodePacked(
@@ -66,11 +65,11 @@ library MembershipMetadata {
     /// @return Returns base64 encoded attributes.
     function _getAttributes(Membership.TokenStruct memory _tokenStruct) internal pure returns (bytes memory) {
         return abi.encodePacked(
-            _getTrait("Holder", Strings.toHexString(_tokenStruct.holder), ","),
-            _getTrait("Minted", Strings.toHexString(_tokenStruct.mintedAt), ","),
-            _getTrait("Joined", Strings.toHexString(_tokenStruct.joinedAt), ","),
-            _getTrait("Experience Points", Strings.toHexString(_tokenStruct.experiencePoints), ","),
-            _getTrait("Activity Points", Strings.toHexString(_tokenStruct.activityPoints), ","),
+            _getTrait("Holder", LibString.toHexString(_tokenStruct.holder), ","),
+            _getTrait("Minted", LibString.toHexString(_tokenStruct.mintedAt), ","),
+            _getTrait("Joined", LibString.toHexString(_tokenStruct.joinedAt), ","),
+            _getTrait("Experience Points", LibString.toHexString(_tokenStruct.experiencePoints), ","),
+            _getTrait("Activity Points", LibString.toHexString(_tokenStruct.activityPoints), ","),
             _getTrait("State", "ONBOARDING", "")
         );
     }

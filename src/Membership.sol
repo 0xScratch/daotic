@@ -10,7 +10,6 @@ import { ERC721Enumerable } from "@oz/token/ERC721/extensions/ERC721Enumerable.s
 import { ERC721Pausable } from "@oz/token/ERC721/extensions/ERC721Pausable.sol";
 import { ERC721Burnable } from "@oz/token/ERC721/extensions/ERC721Burnable.sol";
 import { Base64 } from "@oz/utils/Base64.sol";
-import { Strings } from "@oz/utils/Strings.sol";
 
 import { MembershipMetadata } from "./libraries/MembershipMetadata.sol";
 

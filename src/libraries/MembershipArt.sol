@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.18;
 
-import { Strings } from "@oz/utils/Strings.sol";
+import { LibString } from "@solady/utils/LibString.sol";
 
 import { Membership } from "../Membership.sol";
 
@@ -105,11 +105,11 @@ library MembershipArt {
     function _generateContent(Membership.TokenStruct memory _tokenStruct) internal pure returns (string memory) {
         return string.concat(
             _generateText("104", "187", "Holder"),
-            _generateText("250", "187", Strings.toHexString(_tokenStruct.holder)),
+            _generateText("250", "187", LibString.toHexString(_tokenStruct.holder)),
             _generateText("104", "225", "AP"),
-            _generateText("250", "225", Strings.toString(_tokenStruct.activityPoints)),
+            _generateText("250", "225", LibString.toString(_tokenStruct.activityPoints)),
             _generateText("104", "265", "XP"),
-            _generateText("250", "265", Strings.toString(_tokenStruct.experiencePoints))
+            _generateText("250", "265", LibString.toString(_tokenStruct.experiencePoints))
         );
     }
 
