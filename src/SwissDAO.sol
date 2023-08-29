@@ -58,7 +58,7 @@ contract SwissDAO is ERC1155, AccessControl {
     bytes32 public constant COMMUNITY_MEMBER_ROLE = keccak256("COMMUNITY_MEMBER_ROLE");
 
     /// @dev Animated NFT URI
-    string private constant ANIMATION_TOKEN_URI_PREFIX = "https://www.swissdao.space/membercard/";
+    string private constant ANIMATION_TOKEN_URI_PREFIX = "https://owieth-website-app.vercel.app/members/";
 
     /*//////////////////////////////////////////////////////////////
                                 STRUCTS
@@ -162,7 +162,7 @@ contract SwissDAO is ERC1155, AccessControl {
 
             _name = s_memberStructs[member].nickname;
             _description = "swissDAO Membership";
-            _animation_url = string.concat(ANIMATION_TOKEN_URI_PREFIX, LibString.toHexString(member));
+            _animation_url = string.concat(ANIMATION_TOKEN_URI_PREFIX, LibString.toHexString(member), "/preview");
             _attributes = string(
                 abi.encodePacked(
                     '[{ "trait_type": "Experience Points", "value": "',
