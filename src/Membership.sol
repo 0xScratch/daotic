@@ -91,6 +91,9 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
     /// @dev Track of all swissDAO Memberships
     mapping(uint256 _tokenId => TokenStruct _membership) private s_memberships;
 
+    /// @dev Animated NFT URI
+    string private s_animationTokenUriPrefix = "https://owieth-website-app.vercel.app/members/[HOLDER]/preview";
+
     /*//////////////////////////////////////////////////////////////
                                 MODIFIERS
     //////////////////////////////////////////////////////////////*/
@@ -199,6 +202,15 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
         _revokeRole(CORE_DELEGATE_ROLE, msg.sender);
     }
 
+    /// @notice Update CORE_DELEGATE_ROLE.
+    /// @param _newAnimationTokenUriPrefix New AnimationTokenUriPrefix.
+    function setAnimationTokenUriPrefix(string memory _newAnimationTokenUriPrefix)
+        external
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        s_animationTokenUriPrefix = _newAnimationTokenUriPrefix;
+    }
+
     /// @notice Stop Minting
     function pauseTransactions() external onlyRole(DEFAULT_ADMIN_ROLE) {
         _pause();
@@ -235,7 +247,7 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
     {
         TokenStruct memory _tokenStruct = s_memberships[_tokenId];
 
-        return MembershipMetadata.generateTokenURI(_tokenId, _tokenStruct);
+        return MembershipMetadata.generateTokenURI(_tokenId, s_animationTokenUriPrefix, _tokenStruct);
     }
 
     /// @dev See {IERC165-supportsInterface}.

@@ -2,6 +2,7 @@
 pragma solidity ^0.8.18;
 
 import { Strings } from "@oz/utils/Strings.sol";
+import { LibString } from "@solady/utils/LibString.sol";
 import { Base64 } from "@oz/utils/Base64.sol";
 
 import { MembershipArt } from "./MembershipArt.sol";
@@ -13,13 +14,6 @@ import { Membership } from "../Membership.sol";
 /// @custom:security-contact dev@swissdao.space
 library MembershipMetadata {
     /*//////////////////////////////////////////////////////////////
-                              CONSTANTS
-    //////////////////////////////////////////////////////////////*/
-
-    /// @dev Animated NFT URI
-    string private constant ANIMATION_TOKEN_URI_PREFIX = "https://www.swissdao.space/membercard/";
-
-    /*//////////////////////////////////////////////////////////////
                                 PUBLIC
     //////////////////////////////////////////////////////////////*/
 
@@ -27,6 +21,7 @@ library MembershipMetadata {
     /// @return Returns base64 encoded metadata file.
     function generateTokenURI(
         uint256 _tokenId,
+        string memory _animationTokenUriPrefix,
         Membership.TokenStruct memory _tokenStruct
     )
         public
@@ -51,7 +46,7 @@ library MembershipMetadata {
                     Base64.encode(_svg),
                     '",',
                 '"animation_url": "',
-                string.concat(ANIMATION_TOKEN_URI_PREFIX, _holder),
+                LibString.replace(_animationTokenUriPrefix, "[HOLDER]", _holder),
                 '",',
                 '"attributes": [', 
                     _getAttributes(_tokenStruct),
