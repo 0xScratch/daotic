@@ -30,6 +30,9 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
     /// @dev Thrown if msg.sender is not owner of nft
     error Membership__YouDontOwnThisMembership(uint256 _tokenId);
 
+    /// @dev Thrown if tokenUri is called with invalid _tokenId
+    error Membership__InvalidTokenId(uint256 _tokenId);
+
     /*//////////////////////////////////////////////////////////////
                                 CONSTANTS
     //////////////////////////////////////////////////////////////*/
@@ -231,7 +234,7 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
     }
 
     /*//////////////////////////////////////////////////////////////
-                            INTERNAL OVERRIDES
+                            SOLIDITY OVERRIDES
     //////////////////////////////////////////////////////////////*/
 
     /// @dev Override of the tokenURI function
@@ -244,6 +247,10 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
         override(ERC721, ERC721URIStorage)
         returns (string memory)
     {
+        if (!_exists(_tokenId)) {
+            revert Membership__InvalidTokenId(_tokenId);
+        }
+
         TokenStruct memory _tokenStruct = s_memberships[_tokenId];
 
         return MembershipMetadata.generateTokenURI(_tokenId, s_animationTokenUriPrefix, _tokenStruct);
