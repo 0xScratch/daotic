@@ -10,6 +10,7 @@ import { ERC721Enumerable } from "@oz/token/ERC721/extensions/ERC721Enumerable.s
 import { ERC721Pausable } from "@oz/token/ERC721/extensions/ERC721Pausable.sol";
 import { ERC721Burnable } from "@oz/token/ERC721/extensions/ERC721Burnable.sol";
 import { Base64 } from "@oz/utils/Base64.sol";
+import { LibString } from "@solady/utils/LibString.sol";
 
 import { MembershipMetadata } from "./libraries/MembershipMetadata.sol";
 
@@ -94,7 +95,7 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
     mapping(uint256 _tokenId => TokenStruct _membership) private s_memberships;
 
     /// @dev Animated NFT URI
-    string private s_animationTokenUriPrefix = "https://owieth-website-app.vercel.app/members/[HOLDER]/preview";
+    string private s_backendUri = "https://owieth-website-app.vercel.app/api/";
 
     /*//////////////////////////////////////////////////////////////
                                 MODIFIERS
@@ -210,7 +211,7 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
         external
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
-        s_animationTokenUriPrefix = _newAnimationTokenUriPrefix;
+        s_backendUri = _newAnimationTokenUriPrefix;
     }
 
     /// @notice Stop Minting
@@ -251,9 +252,7 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
             revert Membership__InvalidTokenId(_tokenId);
         }
 
-        TokenStruct memory _tokenStruct = s_memberships[_tokenId];
-
-        return MembershipMetadata.generateTokenURI(_tokenId, s_animationTokenUriPrefix, _tokenStruct);
+        return string.concat(s_backendUri, "metadata/", LibString.toString(_tokenId));
     }
 
     /// @dev See {IERC165-supportsInterface}.
