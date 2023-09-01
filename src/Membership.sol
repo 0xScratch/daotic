@@ -12,8 +12,6 @@ import { ERC721Burnable } from "@oz/token/ERC721/extensions/ERC721Burnable.sol";
 import { Base64 } from "@oz/utils/Base64.sol";
 import { LibString } from "@solady/utils/LibString.sol";
 
-import { MembershipMetadata } from "./libraries/MembershipMetadata.sol";
-
 /// @title Membership
 /// @author https://swissdao.space/ (https://github.com/swissDAO)
 /// @notice Membership Contract for swissDAO
