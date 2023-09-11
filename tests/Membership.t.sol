@@ -2,6 +2,7 @@
 pragma solidity ^0.8.18;
 
 import { Test } from "@std/Test.sol";
+import { LibString } from "@solady/utils/LibString.sol";
 
 import { AccessControlHelper } from "../helpers/AccessControlHelper.sol";
 import { Constants } from "../helpers/Constants.sol";
@@ -72,6 +73,19 @@ contract MembershipTest is Test, AccessControlHelper, Constants {
         s_membership.increaseEventAttendance(_tokenId);
 
         assertEq(s_membership.getTokenStructById(_tokenId).attendedEvents, 2);
+    }
+
+    function test_ShouldRevertTokenURI() public {
+        uint256 _tokenId = 100;
+
+        vm.expectRevert(abi.encodeWithSignature("Membership__InvalidTokenId(uint256)", _tokenId));
+        s_membership.tokenURI(_tokenId);
+    }
+
+    function test_TokenURI() public {
+        uint256 _tokenId = s_membership.mint();
+
+        assertFalse(LibString.eq(s_membership.tokenURI(_tokenId), string(abi.encodePacked(""))));
     }
 
     /*//////////////////////////////////////////////////////////////
