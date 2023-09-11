@@ -197,7 +197,7 @@ contract SwissDAO is ERC1155, AccessControl {
             '", ',
             '"attributes": ',
             _attributes,
-            '}'
+            "}"
         );
         return string(abi.encodePacked("data:application/json;base64,", Base64.encode(_metadata)));
     }
