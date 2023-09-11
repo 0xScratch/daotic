@@ -14,9 +14,6 @@ contract SwissDAO is ERC1155, AccessControl {
     /// @notice This error is thrown when a token is intended to be transferred
     error SwissDAO_SoulboundTokenError();
 
-    /// @notice This error is thrown when a member does not have the required role for calling a function
-    error SwissDAO_PermissionError();
-
     /// @notice Thrown if account already has membership
     error SwissDAO__YouAlreadyAreMember();
 
@@ -82,6 +79,8 @@ contract SwissDAO is ERC1155, AccessControl {
     /// @dev Mapping from member addresses to memberStructs
     mapping(address member => MemberStruct) private s_memberStructs;
 
+    uint256 _lastAPDecreaseTimestamp;
+
     /*//////////////////////////////////////////////////////////////
                                CONSTRUCTOR
     //////////////////////////////////////////////////////////////*/
@@ -100,6 +99,22 @@ contract SwissDAO is ERC1155, AccessControl {
 
         _grantRole(DEFAULT_ADMIN_ROLE, _defaultAdminRoler); // swissDAO mutlisig wallet address
         _grantRole(CORE_DELEGATE_ROLE, _coreDelegateRoler); // swissDAO mutlisig wallet address
+
+        _lastAPDecreaseTimestamp = block.timestamp;
+    }
+
+    /*//////////////////////////////////////////////////////////////
+                             MODIFIERS
+    //////////////////////////////////////////////////////////////*/
+
+    modifier onlyDefaultAdminOrCoreDelegateOrCommunityManager {
+        require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender) || hasRole(CORE_DELEGATE_ROLE, msg.sender) || hasRole(COMMUNITY_MANAGER_ROLE, msg.sender), "Only DEFAULT_ADMIN or CORE_DELEGATE or COMMUNITY_MANAGER can call this function.");
+        _;
+    }
+
+    modifier onlyDefaultAdminOrCoreDelegateOrEventManager {
+        require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender) || hasRole(CORE_DELEGATE_ROLE, msg.sender) || hasRole(EVENT_MANAGER_ROLE, msg.sender), "Only DEFAULT_ADMIN or CORE_DELEGATE or EVENT_MANAGER can call this function.");
+        _;
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -203,15 +218,7 @@ contract SwissDAO is ERC1155, AccessControl {
     }
 
     /// This function increases points for a specified member by a specified ammount. Only core delegates or community manegers can increase experience points.
-    function increasePoints(address member, uint256 amount) public {
-        // Check that the calling account has the CORE_DELEGATE_ROLE or COMMUNITY_MANAGER_ROLE
-        if (
-            !hasRole(DEFAULT_ADMIN_ROLE, msg.sender) && !hasRole(CORE_DELEGATE_ROLE, msg.sender)
-                && !hasRole(COMMUNITY_MANAGER_ROLE, msg.sender)
-        ) {
-            revert SwissDAO_PermissionError();
-        }
-
+    function increasePoints(address member, uint256 amount) onlyDefaultAdminOrCoreDelegateOrCommunityManager public {
         _mint(member, EXPERIENCE_POINTS, amount, "");
         uint256 maxTopUp = 100 - balanceOf(member, ACTIVITY_POINTS); // Activity Points have a ceiling of 100
         uint256 topUp = amount <= maxTopUp ? amount : maxTopUp;
@@ -222,13 +229,8 @@ contract SwissDAO is ERC1155, AccessControl {
 
     /// This function decreases activity points for all members by one. Only core delegates or community manegers can increase experience points.
     function decreaseActivityPoints() public {
-        // Check that the calling account has the CORE_DELEGATE_ROLE or COMMUNITY_MANAGER_ROLE
-        if (
-            !hasRole(DEFAULT_ADMIN_ROLE, msg.sender) && !hasRole(CORE_DELEGATE_ROLE, msg.sender)
-                && !hasRole(COMMUNITY_MANAGER_ROLE, msg.sender)
-        ) {
-            revert SwissDAO_PermissionError();
-        }
+        // Check blocktime maturity
+        require((block.timestamp >= _lastAPDecreaseTimestamp + 1 weeks), "Please wait till one week since the last call of decreaseActivityPoints() has passed.");
 
         for (uint256 i = 0; i < s_members.length;) {
             if (balanceOf(s_members[i], ACTIVITY_POINTS) > 0) {
@@ -238,18 +240,11 @@ contract SwissDAO is ERC1155, AccessControl {
                 ++i;
             }
         }
+        _lastAPDecreaseTimestamp=block.timestamp;
     }
 
     /// This function onboards a new member. Only core delegates or event manegers can onboard members.
-    function onboard(address member, string memory nickname, string memory profileImageUri) public {
-        // Check that the calling account has the CORE_DELEGATE_ROLE or EVENT_MANAGER_ROLE
-        if (
-            !hasRole(DEFAULT_ADMIN_ROLE, msg.sender) && !hasRole(CORE_DELEGATE_ROLE, msg.sender)
-                && !hasRole(EVENT_MANAGER_ROLE, msg.sender)
-        ) {
-            revert SwissDAO_PermissionError();
-        }
-
+    function onboard(address member, string memory nickname, string memory profileImageUri) onlyDefaultAdminOrCoreDelegateOrEventManager public {
         uint256 membershipId = uint256(uint160(member));
 
         // Check if member is not already onboarded

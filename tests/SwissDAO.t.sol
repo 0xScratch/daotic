@@ -72,7 +72,7 @@ contract SwissDAOTest is Test, AccessControlHelper, Constants {
         address _sender = address(10);
 
         vm.prank(_sender);
-        vm.expectRevert(abi.encodeWithSignature("SwissDAO_PermissionError()"));
+        vm.expectRevert("Only DEFAULT_ADMIN or CORE_DELEGATE or COMMUNITY_MANAGER can call this function.");
         s_swissDaoToken.increasePoints(_sender, 10);
     }
 
@@ -80,7 +80,7 @@ contract SwissDAOTest is Test, AccessControlHelper, Constants {
     /// @dev Explain to a developer any extra details
     function test_FuzzShouldRevertIncreasePoints(address _sender) public {
         vm.prank(_sender);
-        vm.expectRevert(abi.encodeWithSignature("SwissDAO_PermissionError()"));
+        vm.expectRevert("Only DEFAULT_ADMIN or CORE_DELEGATE or COMMUNITY_MANAGER can call this function.");
         s_swissDaoToken.increasePoints(_sender, 10);
     }
 
