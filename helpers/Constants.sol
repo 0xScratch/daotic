@@ -25,4 +25,6 @@ contract Constants {
     /// @notice Explain to an end user what this does
     /// @dev Explain to a developer any extra details
     bytes32 public constant CORE_DELEGATE_ROLE = 0x6b42ed08206aec75e1c79a01381db1760227171d022cf137a65b1296f5b08195;
+
+    uint256 public constant CORE_DELEGATE_GUILD_BADGE = 100;
 }

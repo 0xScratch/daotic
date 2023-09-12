@@ -14,6 +14,9 @@ contract SwissDAO is ERC1155, AccessControl {
     /// @notice This error is thrown when a token is intended to be transferred
     error SwissDAO_SoulboundTokenError();
 
+    /// @notice This error is thrown when a member does not have the required role for calling a function
+    error SwissDAO_PermissionError();
+
     /// @notice Thrown if account already has membership
     error SwissDAO__YouAlreadyAreMember();
 
@@ -24,49 +27,39 @@ contract SwissDAO is ERC1155, AccessControl {
     /// @notice Collection name
     string public name;
 
-    /// @notice EXPERIENCE_POINTS, ACTIVITY_POINTS and ATTENDED_EVENTS tokens have the ids 1, 2 and 3, all membership NFT tokens inherit their id from their owners address.
+    // XPERIENCE_POINTS, ACTIVITY_POINTS and ATTENDED_EVENTS tokens have the ids 1, 2 and 3
+    // Guild badges have the ids from 100 till 109
+    // Memberships cards start with the id 10000
+    // AccessControl's roles are used for direct contract permissions
+
     uint256 public constant EXPERIENCE_POINTS = 1;
-
-    /// @notice EXPERIENCE_POINTS, ACTIVITY_POINTS and ATTENDED_EVENTS tokens have the ids 1, 2 and 3, all membership NFT tokens inherit their id from their owners address.
     uint256 public constant ACTIVITY_POINTS = 2;
-
-    /// @notice EXPERIENCE_POINTS, ACTIVITY_POINTS and ATTENDED_EVENTS tokens have the ids 1, 2 and 3, all membership NFT tokens inherit their id from their owners address.
     uint256 public constant ATTENDED_EVENTS = 3;
 
-    /// @notice Explain to a developer any extra details
-    bytes32 public constant CORE_DELEGATE_ROLE = keccak256("CORE_DELEGATE_ROLE");
-
-    /// @notice Explain to a developer any extra details
-    bytes32 public constant COMMUNITY_MANAGER_ROLE = keccak256("COMMUNITY_MANAGER_ROLE");
-
-    /// @notice Explain to a developer any extra details
-    bytes32 public constant EVENT_MANAGER_ROLE = keccak256("EVENT_MANAGER_ROLE");
-
-    /// @notice Explain to a developer any extra details
-    bytes32 public constant PROJECT_MANAGER_ROLE = keccak256("PROJECT_MANAGER_ROLE");
-
-    /// @notice Explain to a developer any extra details
-    bytes32 public constant TREASURY_MANAGER_ROLE = keccak256("TREASURY_MANAGER_ROLE");
-
-    /// @notice Explain to a developer any extra details
-    bytes32 public constant DEVELOPER_ROLE = keccak256("DEVELOPER_ROLE");
-
-    /// @notice Explain to a developer any extra details
-    bytes32 public constant COMMUNITY_MEMBER_ROLE = keccak256("COMMUNITY_MEMBER_ROLE");
+    uint256 public constant CORE_DELEGATE_GUILD_BADGE = 100;
+    uint256 public constant PARTNERSHIPS_GUILD_BADGE = 101;
+    uint256 public constant DEV_GUILD_BADGE = 102;
+    uint256 public constant EVENT_GUILD_BADGE = 103;
+    uint256 public constant MEDIA_GUILD_BADGE = 104;
+    uint256 public constant DESIGN_GUILD_BADGE = 105;
+    uint256 public constant COMMUNITY_GUILD_BADGE = 106;
+    uint256 public constant PROJECT_GUILD_BADGE = 107;
+    uint256 public constant EDUCATION_GUILD_BADGE = 108;
+    uint256 public constant TREASURY_GUILD_BADGE = 109;
 
     /// @dev Animated NFT URI
-    string private constant ANIMATION_TOKEN_URI_PREFIX = "https://owieth-website-app.vercel.app/members/";
+    string private constant _ANIMATION_TOKEN_URI_PREFIX = "https://owieth-website-app.vercel.app/members/";
 
     /*//////////////////////////////////////////////////////////////
                                 STRUCTS
     //////////////////////////////////////////////////////////////*/
 
     /// @dev Struct that contains vital information
-    ///      timestamp: Minted Timestamp
-    struct MemberStruct {
+    struct MembershipStruct {
         string nickname;
         uint256 joinedAt;
         string profileImageUri;
+        string status;
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -76,10 +69,10 @@ contract SwissDAO is ERC1155, AccessControl {
     /// @dev swissDAO members Look Up Table
     address[] public s_members;
 
-    /// @dev Mapping from member addresses to memberStructs
-    mapping(address member => MemberStruct) private s_memberStructs;
+    /// @dev Mapping from member addresses to membershipStructs
+    mapping(address member => MembershipStruct) private s_membershipStructs;
 
-    uint256 _lastAPDecreaseTimestamp;
+    uint256 public _lastAPDecreaseTimestamp;
 
     /*//////////////////////////////////////////////////////////////
                                CONSTRUCTOR
@@ -89,17 +82,8 @@ contract SwissDAO is ERC1155, AccessControl {
     /// @dev Explain to a developer any extra details
     constructor(address _defaultAdminRoler, address _coreDelegateRoler) ERC1155("") {
         name = "swissDAO";
-        _setRoleAdmin(CORE_DELEGATE_ROLE, DEFAULT_ADMIN_ROLE); // Only the swissDAO multisig wallet can grant the core delegate role/guild.
-        _setRoleAdmin(COMMUNITY_MANAGER_ROLE, CORE_DELEGATE_ROLE); // Only core delegates can assign roles/guilds.
-        _setRoleAdmin(EVENT_MANAGER_ROLE, CORE_DELEGATE_ROLE); // Only core delegates can assign roles/guilds.
-        _setRoleAdmin(PROJECT_MANAGER_ROLE, CORE_DELEGATE_ROLE); // Only core delegates can assign roles/guilds.
-        _setRoleAdmin(TREASURY_MANAGER_ROLE, CORE_DELEGATE_ROLE); // Only core delegates can assign roles/guilds.
-        _setRoleAdmin(DEVELOPER_ROLE, CORE_DELEGATE_ROLE); // Only core delegates can assign roles/guilds.
-        _setRoleAdmin(COMMUNITY_MEMBER_ROLE, CORE_DELEGATE_ROLE); // Only core delegates can assign roles/guilds.
-
         _grantRole(DEFAULT_ADMIN_ROLE, _defaultAdminRoler); // swissDAO mutlisig wallet address
-        _grantRole(CORE_DELEGATE_ROLE, _coreDelegateRoler); // swissDAO mutlisig wallet address
-
+        _mint(_coreDelegateRoler, CORE_DELEGATE_GUILD_BADGE, 1, "");
         _lastAPDecreaseTimestamp = block.timestamp;
     }
 
@@ -107,13 +91,17 @@ contract SwissDAO is ERC1155, AccessControl {
                              MODIFIERS
     //////////////////////////////////////////////////////////////*/
 
-    modifier onlyDefaultAdminOrCoreDelegateOrCommunityManager {
-        require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender) || hasRole(CORE_DELEGATE_ROLE, msg.sender) || hasRole(COMMUNITY_MANAGER_ROLE, msg.sender), "Only DEFAULT_ADMIN or CORE_DELEGATE or COMMUNITY_MANAGER can call this function.");
+    modifier onlyDefaultAdminOrCoreDelegateOrCommunity {
+        if(!hasRole(DEFAULT_ADMIN_ROLE, msg.sender) && balanceOf(msg.sender, CORE_DELEGATE_GUILD_BADGE)==0 && balanceOf(msg.sender, COMMUNITY_GUILD_BADGE)==0){
+            revert SwissDAO_PermissionError();
+        }
         _;
     }
 
-    modifier onlyDefaultAdminOrCoreDelegateOrEventManager {
-        require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender) || hasRole(CORE_DELEGATE_ROLE, msg.sender) || hasRole(EVENT_MANAGER_ROLE, msg.sender), "Only DEFAULT_ADMIN or CORE_DELEGATE or EVENT_MANAGER can call this function.");
+    modifier onlyDefaultAdminOrCoreDelegateOrEvent {
+        if(!hasRole(DEFAULT_ADMIN_ROLE, msg.sender) && balanceOf(msg.sender, CORE_DELEGATE_GUILD_BADGE)==0 && balanceOf(msg.sender, EVENT_GUILD_BADGE)==0){
+            revert SwissDAO_PermissionError();
+        }
         _;
     }
 
@@ -160,8 +148,8 @@ contract SwissDAO is ERC1155, AccessControl {
             string memory ae = LibString.toString(balanceOf(member, ATTENDED_EVENTS));
             // bool hasDeveloperRole = hasRole(DEVELOPER_ROLE, member); // add later
             // bool hasProjectManagerRole = hasRole(PROJECT_MANAGER_ROLE, member); // add later
-            // uint256 joinedAt = LibString.toHexString(s_memberStructs[member].joinedAt); // add later
-            // string profileImageUri s_memberStructs[member].profileImageUri; // add later
+            // uint256 joinedAt = LibString.toHexString(s_membershipStructs[member].joinedAt); // add later
+            // string profileImageUri s_membershipStructs[member].profileImageUri; // add later
 
             _svg = abi.encodePacked(
                 '<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000" fill="#1E1E1E" stroke="#ffffff"> <rect width="1000" height="1000" fill="#1E1E1E" /><rect x="75.5" y="140.5" width="349" height="219" rx="11.5" fill="black" stroke="white" />',
@@ -179,9 +167,9 @@ contract SwissDAO is ERC1155, AccessControl {
                 "</tspan></text></svg>"
             );
 
-            _name = s_memberStructs[member].nickname;
+            _name = s_membershipStructs[member].nickname;
             _description = "swissDAO Membership";
-            _animation_url = string.concat(ANIMATION_TOKEN_URI_PREFIX, LibString.toHexString(member), "/preview");
+            _animation_url = string.concat(_ANIMATION_TOKEN_URI_PREFIX, LibString.toHexString(member), "/preview");
             _attributes = string(
                 abi.encodePacked(
                     '[{ "trait_type": "Experience Points", "value": "',
@@ -218,7 +206,7 @@ contract SwissDAO is ERC1155, AccessControl {
     }
 
     /// This function increases points for a specified member by a specified ammount. Only core delegates or community manegers can increase experience points.
-    function increasePoints(address member, uint256 amount) onlyDefaultAdminOrCoreDelegateOrCommunityManager public {
+    function increasePoints(address member, uint256 amount) onlyDefaultAdminOrCoreDelegateOrCommunity public {
         _mint(member, EXPERIENCE_POINTS, amount, "");
         uint256 maxTopUp = 100 - balanceOf(member, ACTIVITY_POINTS); // Activity Points have a ceiling of 100
         uint256 topUp = amount <= maxTopUp ? amount : maxTopUp;
@@ -244,7 +232,7 @@ contract SwissDAO is ERC1155, AccessControl {
     }
 
     /// This function onboards a new member. Only core delegates or event manegers can onboard members.
-    function onboard(address member, string memory nickname, string memory profileImageUri) onlyDefaultAdminOrCoreDelegateOrEventManager public {
+    function onboard(address member, string memory nickname, string memory profileImageUri) onlyDefaultAdminOrCoreDelegateOrEvent public {
         uint256 membershipId = uint256(uint160(member));
 
         // Check if member is not already onboarded
@@ -256,10 +244,9 @@ contract SwissDAO is ERC1155, AccessControl {
         _mint(member, EXPERIENCE_POINTS, 1, "");
         _mint(member, ACTIVITY_POINTS, 1, "");
         _mint(member, membershipId, 1, "");
-        _grantRole(COMMUNITY_MEMBER_ROLE, member);
-        s_memberStructs[member].nickname = nickname;
-        s_memberStructs[member].joinedAt = block.timestamp;
-        s_memberStructs[member].profileImageUri = profileImageUri;
+        s_membershipStructs[member].nickname = nickname;
+        s_membershipStructs[member].joinedAt = block.timestamp;
+        s_membershipStructs[member].profileImageUri = profileImageUri;
     }
 
     /// This function returns the number of onboarded members.
