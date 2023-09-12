@@ -1,0 +1,56 @@
+MembershipTest:test_IncreaseEventAttendanceIfNotAdmin() (gas: 262831)
+MembershipTest:test_Mint() (gas: 256318)
+MembershipTest:test_SetAnimationTokenUriPrefix() (gas: 17226)
+MembershipTest:test_ShouldRevertIncreaseEventAttendanceIfNotAdmin() (gas: 292420)
+MembershipTest:test_ShouldRevertMintIfAlreadyMember() (gas: 252402)
+MembershipTest:test_ShouldRevertSetAnimationTokenUriPrefix() (gas: 45818)
+MembershipTest:test_ShouldRevertTokenURI() (gas: 11776)
+MembershipTest:test_ShouldRevertUpdateProfileImageUri() (gas: 252735)
+MembershipTest:test_TokenURI() (gas: 256620)
+MembershipTest:test_UpdateProfileImageUri() (gas: 254832)
+MembershipTest:test_Upgrade() (gas: 305895)
+SwissDAOTest:test_FuzzReturnsURI(uint256) (runs: 256, μ: 284123, ~: 304153)
+SwissDAOTest:test_FuzzShouldRevertIncreasePoints(address) (runs: 256, μ: 16354, ~: 16354)
+SwissDAOTest:test_IncreasePoints() (gas: 66780)
+SwissDAOTest:test_Initialization() (gas: 11290)
+SwissDAOTest:test_ReturnsURI() (gas: 135002)
+SwissDAOTest:test_ShouldRevertIncreasePoints() (gas: 16241)
+TokenTest:testIncrement() (gas: 28424)
+TokenTest:testSetNumber(uint256) (runs: 256, μ: 27441, ~: 28530)
+
+| src/Membership.sol:Membership contract |                 |        |        |        |         |
+|----------------------------------------|-----------------|--------|--------|--------|---------|
+| Deployment Cost                        | Deployment Size |        |        |        |         |
+| 2506521                                | 12452           |        |        |        |         |
+| Function Name                          | min             | avg    | median | max    | # calls |
+| getTokenStructById                     | 3032            | 3032   | 3032   | 3032   | 4       |
+| increaseEventAttendance                | 3094            | 17677  | 17677  | 32260  | 2       |
+| mint                                   | 746             | 215034 | 241820 | 241820 | 9       |
+| setAnimationTokenUriPrefix             | 14975           | 23802  | 23802  | 32629  | 2       |
+| tokenURI                               | 2213            | 5897   | 8213   | 8213   | 5       |
+| totalSupply                            | 338             | 338    | 338    | 338    | 1       |
+| updateMembership                       | 42838           | 42838  | 42838  | 42838  | 1       |
+| updateProfileImageUri                  | 1043            | 1343   | 1343   | 1643   | 2       |
+
+
+| src/SwissDAO.sol:SwissDAO contract |                 |        |        |        |         |
+|------------------------------------|-----------------|--------|--------|--------|---------|
+| Deployment Cost                    | Deployment Size |        |        |        |         |
+| 3223087                            | 16358           |        |        |        |         |
+| Function Name                      | min             | avg    | median | max    | # calls |
+| ACTIVITY_POINTS                    | 273             | 273    | 273    | 273    | 1       |
+| EXPERIENCE_POINTS                  | 296             | 296    | 296    | 296    | 1       |
+| balanceOf                          | 767             | 767    | 767    | 767    | 2       |
+| hasRole                            | 2732            | 2732   | 2732   | 2732   | 2       |
+| increasePoints                     | 7444            | 23196  | 7444   | 54702  | 3       |
+| uri                                | 125912          | 207104 | 207104 | 288297 | 2       |
+
+
+| src/Token.sol:Token contract |                 |       |        |       |         |
+|------------------------------|-----------------|-------|--------|-------|---------|
+| Deployment Cost              | Deployment Size |       |        |       |         |
+| 612111                       | 3341            |       |        |       |         |
+| Function Name                | min             | avg   | median | max   | # calls |
+| getCurrentNumber             | 315             | 315   | 315    | 315   | 2       |
+| incrementNumber              | 22353           | 22353 | 22353  | 22353 | 1       |
+| setNumber                    | 2501            | 9134  | 2501   | 22401 | 3       |

@@ -112,6 +112,12 @@ Get a gas report:
 $ forge test --gas-report
 ```
 
+Generate gas snapshot
+
+```sh
+$ forge snapshot --snap gas-snapshots/.gas-snapshot-[current Date (1209.2023)]
+```
+
 ### Lint
 
 Lint the contracts:
