@@ -206,6 +206,23 @@ contract SwissDAO is ERC1155, AccessControl {
         return string(abi.encodePacked("data:application/json;base64,", Base64.encode(_metadata)));
     }
 
+    /// Call this function if someone attended an event for the first time. This also mints the first ATTENDED_EVENTS token. Only core delegates or event guild can confirm attendance and onboard members.
+    function onboard(address member, string memory nickname, string memory profileImageUri) onlyDefaultAdminOrCoreDelegateOrEvent public {
+        uint256 membershipId = uint256(uint160(member));
+
+        // Check if member is not already onboarded
+        if (balanceOf(member, membershipId) == 1) {
+            revert SwissDAO__YouAlreadyAreMember();
+        }
+
+        s_members.push(member);
+        _mint(member, ONBOARDING_BADGE, 1, "");
+        attended(member);
+        s_membershipStructs[member].nickname = nickname;
+        s_membershipStructs[member].joinedAt = block.timestamp;
+        s_membershipStructs[member].profileImageUri = profileImageUri;
+    }
+
     /// This function onboards a new member. Only core delegates or event guild can confirm attendance.
     function attended(address attendee) onlyDefaultAdminOrCoreDelegateOrEvent public {
         _mint(attendee, ATTENDED_EVENTS, 1, "");
@@ -235,25 +252,6 @@ contract SwissDAO is ERC1155, AccessControl {
             }
         }
         _lastAPDecreaseTimestamp=block.timestamp;
-    }
-
-    /// This function onboards a new member. Only core delegates or event guild can onboard members.
-    function onboard(address member, string memory nickname, string memory profileImageUri) onlyDefaultAdminOrCoreDelegateOrEvent public {
-        uint256 membershipId = uint256(uint160(member));
-
-        // Check if member is not already onboarded
-        if (balanceOf(member, membershipId) == 1) {
-            revert SwissDAO__YouAlreadyAreMember();
-        }
-
-        s_members.push(member);
-        _mint(member, EXPERIENCE_POINTS, 1, "");
-        _mint(member, ACTIVITY_POINTS, 1, "");
-        _mint(member, membershipId, 1, "");
-        _mint(member, ONBOARDING_BADGE, 1, "");
-        s_membershipStructs[member].nickname = nickname;
-        s_membershipStructs[member].joinedAt = block.timestamp;
-        s_membershipStructs[member].profileImageUri = profileImageUri;
     }
 
     /// This function returns the number of onboarded members.
