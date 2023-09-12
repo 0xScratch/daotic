@@ -47,6 +47,8 @@ contract SwissDAO is ERC1155, AccessControl {
     uint256 public constant EDUCATION_GUILD_BADGE = 108;
     uint256 public constant TREASURY_GUILD_BADGE = 109;
 
+    uint256 public constant ONBOARDING_BADGE = 110;
+
     /// @dev Animated NFT URI
     string private constant _ANIMATION_TOKEN_URI_PREFIX = "https://owieth-website-app.vercel.app/members/";
 
@@ -59,7 +61,6 @@ contract SwissDAO is ERC1155, AccessControl {
         string nickname;
         uint256 joinedAt;
         string profileImageUri;
-        string status;
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -205,6 +206,11 @@ contract SwissDAO is ERC1155, AccessControl {
         return string(abi.encodePacked("data:application/json;base64,", Base64.encode(_metadata)));
     }
 
+    /// This function onboards a new member. Only core delegates or event guild can confirm attendance.
+    function attended(address attendee) onlyDefaultAdminOrCoreDelegateOrEvent public {
+        _mint(attendee, ATTENDED_EVENTS, 1, "");
+    }
+
     /// This function increases points for a specified member by a specified ammount. Only core delegates or community manegers can increase experience points.
     function increasePoints(address member, uint256 amount) onlyDefaultAdminOrCoreDelegateOrCommunity public {
         _mint(member, EXPERIENCE_POINTS, amount, "");
@@ -231,7 +237,7 @@ contract SwissDAO is ERC1155, AccessControl {
         _lastAPDecreaseTimestamp=block.timestamp;
     }
 
-    /// This function onboards a new member. Only core delegates or event manegers can onboard members.
+    /// This function onboards a new member. Only core delegates or event guild can onboard members.
     function onboard(address member, string memory nickname, string memory profileImageUri) onlyDefaultAdminOrCoreDelegateOrEvent public {
         uint256 membershipId = uint256(uint160(member));
 
@@ -244,6 +250,7 @@ contract SwissDAO is ERC1155, AccessControl {
         _mint(member, EXPERIENCE_POINTS, 1, "");
         _mint(member, ACTIVITY_POINTS, 1, "");
         _mint(member, membershipId, 1, "");
+        _mint(member, ONBOARDING_BADGE, 1, "");
         s_membershipStructs[member].nickname = nickname;
         s_membershipStructs[member].joinedAt = block.timestamp;
         s_membershipStructs[member].profileImageUri = profileImageUri;
