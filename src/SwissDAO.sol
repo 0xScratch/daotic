@@ -21,6 +21,9 @@ contract SwissDAO is ERC1155, AccessControl {
     error SwissDAO__YouAlreadyAreMember();
 
     /// @notice Freezed
+    error SwissDAO_FreezedBeforeAttending3Events();
+
+    /// @notice Freezed
     error SwissDAO_FreezedBeforePassingContributorQuest();
 
     /// @notice Contributor onboarding quest
@@ -239,10 +242,13 @@ contract SwissDAO is ERC1155, AccessControl {
         if(msg.sender != member){
             revert SwissDAO_PermissionError(); // Individual task! Do it yourself.
         }
+        if(balanceOf(member, ATTENDED_EVENTS)<3){
+            revert SwissDAO_FreezedBeforeAttending3Events();
+        }
         if(keccak256(abi.encodePacked(answer)) != keccak256(abi.encodePacked("AP"))){
             revert SwissDAO_WrongAnswer();
         }
-        _mint(member, EXPERIENCE_POINTS, 1, "");
+        _mint(member, EXPERIENCE_POINTS, 1, ""); // passing the contributor quest mints the first XP and so unlocks collecting points
     }
 
     /// This function increases points for a specified member by a specified ammount. Only core delegates or community guild can increase points and only after the member passed the contributor quest.

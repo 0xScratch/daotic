@@ -71,8 +71,12 @@ contract SwissDAOTest is Test, AccessControlHelper, Constants {
     function test_takeContributorQuest() public {
         address _sender = Constants.DEFAULT_ADMIN_ROLER;
 
-        vm.prank(_sender);
+        vm.startPrank(_sender);
+        s_swissDaoToken.onboard(_sender, "John", "https://swissdao.space/images/about_6.jpg");
+        s_swissDaoToken.attended(_sender);
+        s_swissDaoToken.attended(_sender);
         s_swissDaoToken.takeContributorQuest(_sender, "AP");
+        vm.stopPrank();
         assertEq(s_swissDaoToken.balanceOf(_sender, s_swissDaoToken.EXPERIENCE_POINTS()), 1);
     }
 
@@ -114,14 +118,17 @@ contract SwissDAOTest is Test, AccessControlHelper, Constants {
         address _sender = Constants.DEFAULT_ADMIN_ROLER;
         uint256 _amount = 10;
 
-        vm.prank(_sender);
+        vm.startPrank(_sender);
+        s_swissDaoToken.onboard(_sender, "John", "https://swissdao.space/images/about_6.jpg");
+        s_swissDaoToken.attended(_sender);
+        s_swissDaoToken.attended(_sender);
         s_swissDaoToken.takeContributorQuest(_sender, "AP");
 
         uint256 _xpBefore = s_swissDaoToken.balanceOf(_sender, s_swissDaoToken.EXPERIENCE_POINTS());
         uint256 _apBefore = s_swissDaoToken.balanceOf(_sender, s_swissDaoToken.ACTIVITY_POINTS());
 
-        vm.prank(_sender);
         s_swissDaoToken.increasePoints(_sender, _amount);
+        vm.stopPrank();
 
         assertEq(s_swissDaoToken.balanceOf(_sender, s_swissDaoToken.EXPERIENCE_POINTS()), _xpBefore + _amount);
         assertEq(s_swissDaoToken.balanceOf(_sender, s_swissDaoToken.ACTIVITY_POINTS()), _apBefore + _amount);
