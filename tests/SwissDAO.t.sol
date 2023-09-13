@@ -107,6 +107,7 @@ contract SwissDAOTest is Test, AccessControlHelper, Constants {
     /// @notice Explain to an end user what this does
     /// @dev Explain to a developer any extra details
     function test_FuzzShouldRevertIncreasePoints(address _sender) public {
+        vm.assume(_sender != address(0));
         vm.prank(_sender);
         vm.expectRevert(abi.encodeWithSignature("SwissDAO__PermissionError()"));
         s_swissDaoToken.increasePoints(_sender, 10);

@@ -118,7 +118,8 @@ contract SwissDAO is ERC1155, AccessControl {
     //////////////////////////////////////////////////////////////*/
 
     modifier onlyDefaultAdminOrCoreDelegateOrCommunity {
-        if(!(hasRole(DEFAULT_ADMIN_ROLE, msg.sender) && balanceOf(msg.sender, CORE_DELEGATE_GUILD_BADGE)==0 && balanceOf(msg.sender, COMMUNITY_GUILD_BADGE)==0)){
+        // require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender) || balanceOf(msg.sender, CORE_DELEGATE_GUILD_BADGE)==1 || balanceOf(msg.sender, COMMUNITY_GUILD_BADGE)==1, "SwissDAO PermissionError");
+        if(!hasRole(DEFAULT_ADMIN_ROLE, msg.sender) && balanceOf(msg.sender, CORE_DELEGATE_GUILD_BADGE)==0 && balanceOf(msg.sender, COMMUNITY_GUILD_BADGE)==0){
             revert SwissDAO__PermissionError();
         }
         _;
