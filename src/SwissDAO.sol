@@ -236,6 +236,9 @@ contract SwissDAO is ERC1155, AccessControl {
 
     /// What is the short name of the token representing your voting power? The code is published so you can see the correct answer here.
     function takeContributorQuest(address member, string memory answer) public {
+        if(msg.sender != member){
+            revert SwissDAO_PermissionError(); // Individual task! Do it yourself.
+        }
         if(keccak256(abi.encodePacked(answer)) != keccak256(abi.encodePacked("AP"))){
             revert SwissDAO_WrongAnswer();
         }
