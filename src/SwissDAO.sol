@@ -12,22 +12,22 @@ contract SwissDAO is ERC1155, AccessControl {
     //////////////////////////////////////////////////////////////*/
 
     /// @notice This error is thrown when a token is intended to be transferred
-    error SwissDAO_SoulboundTokenError();
+    error SwissDAO__SoulboundTokenError();
 
     /// @notice This error is thrown when a member does not have the required role for calling a function
-    error SwissDAO_PermissionError();
+    error SwissDAO__PermissionError();
 
     /// @notice Thrown if account already has membership
     error SwissDAO__YouAlreadyAreMember();
 
     /// @notice Freezed
-    error SwissDAO_FreezedBeforeAttending3Events();
+    error SwissDAO__FreezedBeforeAttending3Events();
 
     /// @notice Freezed
-    error SwissDAO_FreezedBeforePassingContributorQuest();
+    error SwissDAO__FreezedBeforePassingContributorQuest();
 
     /// @notice Contributor onboarding quest
-    error SwissDAO_WrongAnswer();
+    error SwissDAO__WrongAnswer();
 
     /*//////////////////////////////////////////////////////////////
                               CONSTANTS
@@ -59,7 +59,7 @@ contract SwissDAO is ERC1155, AccessControl {
     uint256 public constant ONBOARDING_BADGE = 110;
 
     /// @dev Animated NFT URI
-    string private constant _ANIMATION_TOKEN_URI_PREFIX = "https://owieth-website-app.vercel.app/members/";
+    string private constant ANIMATION_TOKEN_URI_PREFIX = "https://owieth-website-app.vercel.app/members/";
 
     /*//////////////////////////////////////////////////////////////
                                 STRUCTS
@@ -76,13 +76,28 @@ contract SwissDAO is ERC1155, AccessControl {
                               STORAGE
     //////////////////////////////////////////////////////////////*/
 
+    // The mapping from token ID to account balances (who ownes how much of which token) is defined in the parent contract ERC1155 as
+    // mapping(uint256 => mapping(address => uint256)) private _balances;
+
+    // XPERIENCE_POINTS, ACTIVITY_POINTS and ATTENDED_EVENTS tokens have the ids 1, 2 and 3
+    // Guild badges have the ids from 100 till 109, max one per guild per address
+    // Memberships cards start with the id 10000, max one membership per address
+
+    /// @dev Mapping from membershipIDs to member addresses
+    mapping(uint256 => address) private s_memberAddresses;
+
     /// @dev swissDAO members Look Up Table
     address[] public s_members;
 
+    // /// @dev Mapping from member addresses to membershipIDs
+    // mapping(address => uint256) private s_membershipIDs;
+
     /// @dev Mapping from member addresses to membershipStructs
-    mapping(address member => MembershipStruct) private s_membershipStructs;
+    mapping(address => MembershipStruct) private s_membershipStructs;
 
     uint256 public _lastAPDecreaseTimestamp;
+
+    uint256 private next_membership_id;
 
     /*//////////////////////////////////////////////////////////////
                                CONSTRUCTOR
@@ -92,6 +107,7 @@ contract SwissDAO is ERC1155, AccessControl {
     /// @dev Explain to a developer any extra details
     constructor(address _defaultAdminRoler, address _coreDelegateRoler) ERC1155("") {
         name = "swissDAO";
+        next_membership_id = 10000;
         _grantRole(DEFAULT_ADMIN_ROLE, _defaultAdminRoler); // swissDAO mutlisig wallet address
         _mint(_coreDelegateRoler, CORE_DELEGATE_GUILD_BADGE, 1, "");
         _lastAPDecreaseTimestamp = block.timestamp;
@@ -103,14 +119,14 @@ contract SwissDAO is ERC1155, AccessControl {
 
     modifier onlyDefaultAdminOrCoreDelegateOrCommunity {
         if(!(hasRole(DEFAULT_ADMIN_ROLE, msg.sender) && balanceOf(msg.sender, CORE_DELEGATE_GUILD_BADGE)==0 && balanceOf(msg.sender, COMMUNITY_GUILD_BADGE)==0)){
-            revert SwissDAO_PermissionError();
+            revert SwissDAO__PermissionError();
         }
         _;
     }
 
     modifier onlyDefaultAdminOrCoreDelegateOrEvent {
         if(!hasRole(DEFAULT_ADMIN_ROLE, msg.sender) && balanceOf(msg.sender, CORE_DELEGATE_GUILD_BADGE)==0 && balanceOf(msg.sender, EVENT_GUILD_BADGE)==0){
-            revert SwissDAO_PermissionError();
+            revert SwissDAO__PermissionError();
         }
         _;
     }
@@ -152,7 +168,10 @@ contract SwissDAO is ERC1155, AccessControl {
             _name = "EVENTS";
             _description = "Attended Events";
         } else {
-            address member = address(uint160(_tokenid)); // membership NFT tokens inherit their id from their owners address
+            address member = s_memberAddresses[_tokenid]; // membership tokens have ids from 10000
+            if(member == address(0)){
+                return string(abi.encodePacked("This MembershipID does not exist!"));
+            }
             string memory xp = LibString.toString(balanceOf(member, EXPERIENCE_POINTS));
             string memory ap = LibString.toString(balanceOf(member, ACTIVITY_POINTS));
             string memory ae = LibString.toString(balanceOf(member, ATTENDED_EVENTS));
@@ -179,7 +198,7 @@ contract SwissDAO is ERC1155, AccessControl {
 
             _name = s_membershipStructs[member].nickname;
             _description = "swissDAO Membership";
-            _animation_url = string.concat(_ANIMATION_TOKEN_URI_PREFIX, LibString.toHexString(member), "/preview");
+            _animation_url = string.concat(ANIMATION_TOKEN_URI_PREFIX, LibString.toHexString(member), "/preview");
             _attributes = string(
                 abi.encodePacked(
                     '[{ "trait_type": "Experience Points", "value": "',
@@ -216,23 +235,29 @@ contract SwissDAO is ERC1155, AccessControl {
     }
 
     /// Call this function if someone attended an event for the first time. This also mints the first ATTENDED_EVENTS token. Only core delegates or event guild can confirm attendance and onboard members.
-    function onboard(address member, string memory nickname, string memory profileImageUri) onlyDefaultAdminOrCoreDelegateOrEvent public {
-        uint256 membershipId = uint256(uint160(member));
+    function onboard(address member, string memory nickname, string memory profileImageUri) onlyDefaultAdminOrCoreDelegateOrEvent public returns (uint256) {
 
-        // Check if member is not already onboarded
-        if (balanceOf(member, membershipId) == 1) {
-            revert SwissDAO__YouAlreadyAreMember();
+        // Loop through the member array and check if it already includes this member address.
+        for (uint256 i; i < s_members.length; i++) {
+            if (s_members[i] == member) {
+                revert SwissDAO__YouAlreadyAreMember();
+            }
         }
 
         s_members.push(member);
-        _mint(member, ONBOARDING_BADGE, 1, "");
         attended(member);
+        _mint(member, ONBOARDING_BADGE, 1, "");
+        _mint(member, next_membership_id, 1, ""); // this is the official mapping of the parent ERC1155 contract
+        s_memberAddresses[next_membership_id] = member; // this is an additional mapping for uniquely coupled membershipIDs and member addresses
         s_membershipStructs[member].nickname = nickname;
         s_membershipStructs[member].joinedAt = block.timestamp;
         s_membershipStructs[member].profileImageUri = profileImageUri;
+
+        next_membership_id++;
+        return next_membership_id - 1; // this is the corresponding membershipID.
     }
 
-    /// This function onboards a new member. Only core delegates or event guild can confirm attendance.
+    /// This function confirm attendance of a member. Only core delegates or event guild can confirm attendance.
     function attended(address member) onlyDefaultAdminOrCoreDelegateOrEvent public {
         _mint(member, ATTENDED_EVENTS, 1, "");
     }
@@ -240,13 +265,13 @@ contract SwissDAO is ERC1155, AccessControl {
     /// What is the short name of the token representing your voting power? The code is published so you can see the correct answer here.
     function takeContributorQuest(address member, string memory answer) public {
         if(msg.sender != member){
-            revert SwissDAO_PermissionError(); // Individual task! Do it yourself.
+            revert SwissDAO__PermissionError(); // Individual task! Do it yourself.
         }
         if(balanceOf(member, ATTENDED_EVENTS)<3){
-            revert SwissDAO_FreezedBeforeAttending3Events();
+            revert SwissDAO__FreezedBeforeAttending3Events();
         }
         if(keccak256(abi.encodePacked(answer)) != keccak256(abi.encodePacked("AP"))){
-            revert SwissDAO_WrongAnswer();
+            revert SwissDAO__WrongAnswer();
         }
         _mint(member, EXPERIENCE_POINTS, 1, ""); // passing the contributor quest mints the first XP and so unlocks collecting points
     }
@@ -254,7 +279,7 @@ contract SwissDAO is ERC1155, AccessControl {
     /// This function increases points for a specified member by a specified ammount. Only core delegates or community guild can increase points and only after the member passed the contributor quest.
     function increasePoints(address member, uint256 amount) onlyDefaultAdminOrCoreDelegateOrCommunity public {
         if(balanceOf(member, EXPERIENCE_POINTS)==0){
-            revert SwissDAO_FreezedBeforePassingContributorQuest();
+            revert SwissDAO__FreezedBeforePassingContributorQuest();
         }
         _mint(member, EXPERIENCE_POINTS, amount, "");
         uint256 maxTopUp = 100 - balanceOf(member, ACTIVITY_POINTS); // Activity Points have a ceiling of 100
@@ -309,7 +334,7 @@ contract SwissDAO is ERC1155, AccessControl {
         override(ERC1155)
     {
         if (_from != address(0) && _to != address(0)) {
-            revert SwissDAO_SoulboundTokenError();
+            revert SwissDAO__SoulboundTokenError();
         }
 
         super._beforeTokenTransfer(_operator, _from, _to, _ids, _amounts, _data);
