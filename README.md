@@ -115,7 +115,7 @@ $ forge test --gas-report
 Generate gas snapshot
 
 ```sh
-$ forge snapshot --snap gas-snapshots/.gas-snapshot-[current Date (1209.2023)]
+$ forge snapshot --snap gas-snapshots/.gas-snapshot-[current Date (12092023)]
 ```
 
 ### Lint
