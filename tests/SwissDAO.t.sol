@@ -63,6 +63,21 @@ contract SwissDAOTest is Test, AccessControlHelper, Constants {
     }
 
     /*//////////////////////////////////////////////////////////////
+                      function takeContributorQuest()
+    //////////////////////////////////////////////////////////////*/
+/*
+    /// @notice Explain to an end user what this does
+    /// @dev Explain to a developer any extra details
+    function test_takeContributorQuest() public {
+        address _sender = Constants.DEFAULT_ADMIN_ROLER;
+        uint256 _amount = 10;
+
+        vm.prank(_sender);
+        s_swissDaoToken.takeContributorQuest(_sender, "AP");
+        assertEq(s_swissDaoToken.balanceOf(_sender, s_swissDaoToken.EXPERIENCE_POINTS()), 1);
+    }
+*/
+    /*//////////////////////////////////////////////////////////////
                       function increasePoints()
     //////////////////////////////////////////////////////////////*/
 
@@ -91,6 +106,11 @@ contract SwissDAOTest is Test, AccessControlHelper, Constants {
         uint256 _amount = 10;
 
         vm.prank(_sender);
+        //s_swissDaoToken.takeContributorQuest(_sender, "AP");
+        //assertEq(s_swissDaoToken.balanceOf(_sender, s_swissDaoToken.EXPERIENCE_POINTS()), 1);
+
+        //assertTrue(s_swissDaoToken.hasRole(Constants.DEFAULT_ADMIN_ROLE, Constants.DEFAULT_ADMIN_ROLER));
+        //assertTrue(s_swissDaoToken.hasRole(Constants.DEFAULT_ADMIN_ROLE, _sender));
         s_swissDaoToken.increasePoints(_sender, _amount);
 
         assertEq(s_swissDaoToken.balanceOf(_sender, s_swissDaoToken.EXPERIENCE_POINTS()), _amount);
