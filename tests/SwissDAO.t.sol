@@ -65,29 +65,38 @@ contract SwissDAOTest is Test, AccessControlHelper, Constants {
     /*//////////////////////////////////////////////////////////////
                       function takeContributorQuest()
     //////////////////////////////////////////////////////////////*/
-/*
+
     /// @notice Explain to an end user what this does
     /// @dev Explain to a developer any extra details
     function test_takeContributorQuest() public {
         address _sender = Constants.DEFAULT_ADMIN_ROLER;
-        uint256 _amount = 10;
 
         vm.prank(_sender);
         s_swissDaoToken.takeContributorQuest(_sender, "AP");
         assertEq(s_swissDaoToken.balanceOf(_sender, s_swissDaoToken.EXPERIENCE_POINTS()), 1);
     }
-*/
+
     /*//////////////////////////////////////////////////////////////
                       function increasePoints()
     //////////////////////////////////////////////////////////////*/
 
     /// @notice Explain to an end user what this does
     /// @dev Explain to a developer any extra details
-    function test_ShouldRevertIncreasePoints() public {
+    function test_ShouldRevertIncreasePointsPermissionError() public {
         address _sender = address(10);
 
         vm.prank(_sender);
         vm.expectRevert(abi.encodeWithSignature("SwissDAO_PermissionError()"));
+        s_swissDaoToken.increasePoints(_sender, 10);
+    }
+
+    /// @notice Explain to an end user what this does
+    /// @dev Explain to a developer any extra details
+    function test_ShouldRevertIncreasePointsFreezed() public {
+        address _sender = Constants.DEFAULT_ADMIN_ROLER;
+
+        vm.prank(_sender);
+        vm.expectRevert(abi.encodeWithSignature("SwissDAO_FreezedBeforePassingContributorQuest()")); // before passing contributor quest
         s_swissDaoToken.increasePoints(_sender, 10);
     }
 
@@ -106,14 +115,15 @@ contract SwissDAOTest is Test, AccessControlHelper, Constants {
         uint256 _amount = 10;
 
         vm.prank(_sender);
-        //s_swissDaoToken.takeContributorQuest(_sender, "AP");
-        //assertEq(s_swissDaoToken.balanceOf(_sender, s_swissDaoToken.EXPERIENCE_POINTS()), 1);
+        s_swissDaoToken.takeContributorQuest(_sender, "AP");
 
-        //assertTrue(s_swissDaoToken.hasRole(Constants.DEFAULT_ADMIN_ROLE, Constants.DEFAULT_ADMIN_ROLER));
-        //assertTrue(s_swissDaoToken.hasRole(Constants.DEFAULT_ADMIN_ROLE, _sender));
+        uint256 _xpBefore = s_swissDaoToken.balanceOf(_sender, s_swissDaoToken.EXPERIENCE_POINTS());
+        uint256 _apBefore = s_swissDaoToken.balanceOf(_sender, s_swissDaoToken.ACTIVITY_POINTS());
+
+        vm.prank(_sender);
         s_swissDaoToken.increasePoints(_sender, _amount);
 
-        assertEq(s_swissDaoToken.balanceOf(_sender, s_swissDaoToken.EXPERIENCE_POINTS()), _amount);
-        assertEq(s_swissDaoToken.balanceOf(_sender, s_swissDaoToken.ACTIVITY_POINTS()), _amount);
+        assertEq(s_swissDaoToken.balanceOf(_sender, s_swissDaoToken.EXPERIENCE_POINTS()), _xpBefore + _amount);
+        assertEq(s_swissDaoToken.balanceOf(_sender, s_swissDaoToken.ACTIVITY_POINTS()), _apBefore + _amount);
     }
 }

@@ -233,7 +233,7 @@ contract SwissDAO is ERC1155, AccessControl {
     function attended(address member) onlyDefaultAdminOrCoreDelegateOrEvent public {
         _mint(member, ATTENDED_EVENTS, 1, "");
     }
-/*
+
     /// What is the short name of the token representing your voting power? The code is published so you can see the correct answer here.
     function takeContributorQuest(address member, string memory answer) public {
         if(keccak256(abi.encodePacked(answer)) != keccak256(abi.encodePacked("AP"))){
@@ -241,12 +241,12 @@ contract SwissDAO is ERC1155, AccessControl {
         }
         _mint(member, EXPERIENCE_POINTS, 1, "");
     }
-*/
+
     /// This function increases points for a specified member by a specified ammount. Only core delegates or community guild can increase points and only after the member passed the contributor quest.
     function increasePoints(address member, uint256 amount) onlyDefaultAdminOrCoreDelegateOrCommunity public {
-        /*if(balanceOf(member, EXPERIENCE_POINTS)==0){
+        if(balanceOf(member, EXPERIENCE_POINTS)==0){
             revert SwissDAO_FreezedBeforePassingContributorQuest();
-        }*/
+        }
         _mint(member, EXPERIENCE_POINTS, amount, "");
         uint256 maxTopUp = 100 - balanceOf(member, ACTIVITY_POINTS); // Activity Points have a ceiling of 100
         uint256 topUp = amount <= maxTopUp ? amount : maxTopUp;
