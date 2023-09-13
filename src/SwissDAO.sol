@@ -56,8 +56,6 @@ contract SwissDAO is ERC1155, AccessControl {
     uint256 public constant EDUCATION_GUILD_BADGE = 108;
     uint256 public constant TREASURY_GUILD_BADGE = 109;
 
-    uint256 public constant ONBOARDING_BADGE = 110;
-
     /// @dev Animated NFT URI
     string private constant ANIMATION_TOKEN_URI_PREFIX = "https://owieth-website-app.vercel.app/members/";
 
@@ -247,7 +245,6 @@ contract SwissDAO is ERC1155, AccessControl {
 
         s_members.push(member);
         attended(member);
-        _mint(member, ONBOARDING_BADGE, 1, "");
         _mint(member, next_membership_id, 1, ""); // this is the official mapping of the parent ERC1155 contract
         s_memberAddresses[next_membership_id] = member; // this is an additional mapping for uniquely coupled membershipIDs and member addresses
         s_membershipStructs[member].nickname = nickname;
