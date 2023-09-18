@@ -53,9 +53,6 @@ contract SwissDAO is ERC1155, AccessControl {
     uint256 public constant EDUCATION_GUILD_BADGE = 108;
     uint256 public constant TREASURY_GUILD_BADGE = 109;
 
-    /// @dev Animated NFT URI
-    string private constant ANIMATION_TOKEN_URI_PREFIX = "https://owieth-website-app.vercel.app/members/";
-
     /*//////////////////////////////////////////////////////////////
                                 STRUCTS
     //////////////////////////////////////////////////////////////*/
@@ -122,7 +119,12 @@ contract SwissDAO is ERC1155, AccessControl {
 
     /// @notice Explain to a developer any extra details
     /// @dev Explain to a developer any extra details
-    constructor(address _defaultAdminRoler, address _coreDelegateRoler) ERC1155("") {
+    constructor(
+        address _defaultAdminRoler,
+        address _coreDelegateRoler
+    )
+        ERC1155("https://owieth-website-app.vercel.app/api/metadata/{id}")
+    {
         _grantRole(DEFAULT_ADMIN_ROLE, _defaultAdminRoler); // swissDAO mutlisig wallet address
         _mint(_coreDelegateRoler, CORE_DELEGATE_GUILD_BADGE, 1, "");
         s_lastAPDecreaseTimestamp = block.timestamp;
