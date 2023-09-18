@@ -79,7 +79,7 @@ contract SwissDAO is ERC1155, AccessControl {
     // Memberships cards start with the id 10000, max one membership per address
 
     /// @dev swissDAO members Look Up Table
-    address[] public s_members;
+    address[] private s_members;
 
     // /// @dev Mapping from member addresses to membershipIDs
     // mapping(address => uint256) private s_membershipIDs;
