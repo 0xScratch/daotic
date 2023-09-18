@@ -167,49 +167,6 @@ contract SwissDAO is ERC1155, AccessControl {
             );
             _name = "EVENTS";
             _description = "Attended Events";
-        } else {
-            address member = s_memberAddresses[_tokenid]; // membership tokens have ids from 10000
-            if (member == address(0)) {
-                return string(abi.encodePacked("This MembershipID does not exist!"));
-            }
-            string memory xp = LibString.toString(balanceOf(member, EXPERIENCE_POINTS));
-            string memory ap = LibString.toString(balanceOf(member, ACTIVITY_POINTS));
-            string memory ae = LibString.toString(balanceOf(member, ATTENDED_EVENTS));
-            // bool hasDeveloperRole = hasRole(DEVELOPER_ROLE, member); // add later
-            // bool hasProjectManagerRole = hasRole(PROJECT_MANAGER_ROLE, member); // add later
-            // uint256 joinedAt = LibString.toHexString(s_membershipStructs[member].joinedAt); // add later
-            // string profileImageUri s_membershipStructs[member].profileImageUri; // add later
-
-            _svg = abi.encodePacked(
-                '<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000" fill="#1E1E1E" stroke="#ffffff"> <rect width="1000" height="1000" fill="#1E1E1E" /><rect x="75.5" y="140.5" width="349" height="219" rx="11.5" fill="black" stroke="white" />',
-                '<text fill="white" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="24" letter-spacing="-0.04em"><tspan x="104" y="187">Holder</tspan></text>',
-                '<text fill="white" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="24" letter-spacing="-0.04em"><tspan x="250" y="187">',
-                LibString.toHexString(member),
-                "</tspan></text>",
-                '<text fill="white" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="24" letter-spacing="-0.04em"><tspan x="104" y="225">AP</tspan></text>',
-                '<text fill="white" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="24" letter-spacing="-0.04em"><tspan x="250" y="225">',
-                ap,
-                "</tspan></text>",
-                '<text fill="white" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="24" letter-spacing="-0.04em"><tspan x="104" y="265">XP</tspan></text>',
-                '<text fill="white" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="24" letter-spacing="-0.04em"><tspan x="250" y="265">',
-                xp,
-                "</tspan></text></svg>"
-            );
-
-            _name = s_membershipStructs[member].nickname;
-            _description = "swissDAO Membership";
-            _animation_url = string.concat(ANIMATION_TOKEN_URI_PREFIX, LibString.toHexString(member), "/preview");
-            _attributes = string(
-                abi.encodePacked(
-                    '[{ "trait_type": "Experience Points", "value": "',
-                    xp,
-                    ' "}, { "trait_type": "Activity Points", "value": "',
-                    ap,
-                    '"}, { "trait_type": "Attended Events", "value": "',
-                    ae,
-                    '"}]'
-                )
-            );
         }
 
         bytes memory _metadata = abi.encodePacked(
