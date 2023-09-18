@@ -85,7 +85,7 @@ contract SwissDAO is ERC1155, AccessControl {
     // mapping(address => uint256) private s_membershipIDs;
 
     /// @dev Mapping from member addresses to membershipStructs
-    mapping(address => MembershipStruct) private s_membershipStructs;
+    mapping(address => MembershipStruct) private s_memberships;
 
     uint256 private s_lastAPDecreaseTimestamp;
 
@@ -157,9 +157,9 @@ contract SwissDAO is ERC1155, AccessControl {
         _mint(member, s_membershipIdsCounter, 1, ""); // this is the official mapping of the parent ERC1155 contract
         attended(member);
         s_members.push(member);
-        s_membershipStructs[member].nickname = nickname;
-        s_membershipStructs[member].joinedAt = block.timestamp;
-        s_membershipStructs[member].profileImageUri = profileImageUri;
+        s_memberships[member].nickname = nickname;
+        s_memberships[member].joinedAt = block.timestamp;
+        s_memberships[member].profileImageUri = profileImageUri;
 
         ++s_membershipIdsCounter;
     }
