@@ -37,7 +37,7 @@ contract SwissDAOTest is Test, AccessControlHelper, Constants {
     /// @dev Explain to a developer any extra details
     function test_Initialization() public {
         assertTrue(s_swissDaoToken.hasRole(Constants.DEFAULT_ADMIN_ROLE, Constants.DEFAULT_ADMIN_ROLER));
-        assertTrue(s_swissDaoToken.balanceOf(Constants.CORE_DELEGATE_ROLER, Constants.CORE_DELEGATE_GUILD_BADGE)==1);
+        assertTrue(s_swissDaoToken.balanceOf(Constants.CORE_DELEGATE_ROLER, Constants.CORE_DELEGATE_GUILD_BADGE) == 1);
     }
 
     /*//////////////////////////////////////////////////////////////
