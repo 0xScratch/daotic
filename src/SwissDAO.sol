@@ -169,12 +169,15 @@ contract SwissDAO is ERC1155, AccessControl {
         if (msg.sender != member) {
             revert SwissDAO__PermissionError(); // Individual task! Do it yourself.
         }
+
         if (balanceOf(member, ATTENDED_EVENTS) < 3) {
             revert SwissDAO__FreezedBeforeAttending3Events();
         }
+
         if (keccak256(abi.encodePacked(answer)) != keccak256(abi.encodePacked("AP"))) {
             revert SwissDAO__WrongAnswer();
         }
+
         _mint(member, EXPERIENCE_POINTS, 1, ""); // passing the contributor quest mints the first XP and so unlocks collecting points
     }
 
@@ -183,9 +186,11 @@ contract SwissDAO is ERC1155, AccessControl {
         if (balanceOf(member, EXPERIENCE_POINTS) == 0) {
             revert SwissDAO__FreezedBeforePassingContributorQuest();
         }
+
         _mint(member, EXPERIENCE_POINTS, amount, "");
         uint256 maxTopUp = 100 - balanceOf(member, ACTIVITY_POINTS); // Activity Points have a ceiling of 100
         uint256 topUp = amount <= maxTopUp ? amount : maxTopUp;
+
         if (topUp != 0) {
             _mint(member, ACTIVITY_POINTS, topUp, "");
         }
