@@ -226,7 +226,7 @@ contract SwissDAO is ERC1155, AccessControl {
     /// @notice Explain to a developer any extra details
     /// @dev Explain to a developer any extra details
     /// @param _tokenid Sender's Address
-    function uri(uint256 _tokenid) public view override returns (string memory) {
+    function uri(uint256 _tokenid) public pure override returns (string memory) {
         bytes memory _svg;
         string memory _name;
         string memory _description;
