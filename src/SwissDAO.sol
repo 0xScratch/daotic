@@ -201,10 +201,16 @@ contract SwissDAO is ERC1155, AccessControl {
         onlyDefaultAdminOrCoreDelegateOrEvent
         returns (uint256)
     {
+        uint256 _membersArrayLength = s_members.length;
+
         // Loop through the member array and check if it already includes this member address.
-        for (uint256 i; i < s_members.length; i++) {
+        for (uint256 i; i < _membersArrayLength;) {
             if (s_members[i] == member) {
                 revert SwissDAO__YouAlreadyAreMember();
+            }
+
+            unchecked {
+                ++i;
             }
         }
 
@@ -260,10 +266,13 @@ contract SwissDAO is ERC1155, AccessControl {
             "Please wait till one week since the last call of decreaseActivityPoints() has passed."
         );
 
-        for (uint256 i = 0; i < s_members.length;) {
+        uint256 _membersArrayLength = s_members.length;
+
+        for (uint256 i = 0; i < _membersArrayLength;) {
             if (balanceOf(s_members[i], ACTIVITY_POINTS) > 0) {
                 _burn(s_members[i], ACTIVITY_POINTS, 1);
             }
+
             unchecked {
                 ++i;
             }
