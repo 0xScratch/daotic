@@ -222,6 +222,12 @@ contract SwissDAO is ERC1155, AccessControl {
         return s_members.length;
     }
 
+    /// @notice Get function for tokenstruct of tokenid
+    /// @return TokenStruct
+    function getMembershipStructByHolder(address _holder) external view returns (MembershipStruct memory) {
+        return s_memberships[_holder];
+    }
+
     /*//////////////////////////////////////////////////////////////
                                PUBLIC
     //////////////////////////////////////////////////////////////*/
