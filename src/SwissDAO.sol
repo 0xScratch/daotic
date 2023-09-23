@@ -68,7 +68,7 @@ contract SwissDAO is ERC1155, AccessControl {
                               STORAGE
     //////////////////////////////////////////////////////////////*/
 
-    // The mapping from token ID to account balances (who ownes how much of which token) is defined in the parent contract ERC1155 as
+    // The mapping from token ID to account balances (who owns how much of which token) is defined in the parent contract ERC1155 as
     // mapping(uint256 => mapping(address => uint256)) private _balances;
 
     // XPERIENCE_POINTS, ACTIVITY_POINTS and ATTENDED_EVENTS tokens have the ids 1, 2 and 3
@@ -180,7 +180,7 @@ contract SwissDAO is ERC1155, AccessControl {
         _mint(member, EXPERIENCE_POINTS, 1, ""); // passing the contributor quest mints the first XP and so unlocks collecting points
     }
 
-    /// This function increases points for a specified member by a specified ammount. Only core delegates or community guild can increase points and only after the member passed the contributor quest.
+    /// This function increases points for a specified member by a specified amount. Only core delegates or community guild can increase points and only after the member passed the contributor quest.
     function increasePoints(address member, uint256 amount) external onlyDefaultAdminOrCoreDelegateOrCommunity {
         if (balanceOf(member, EXPERIENCE_POINTS) == 0) {
             revert SwissDAO__FreezedBeforePassingContributorQuest();
@@ -195,7 +195,7 @@ contract SwissDAO is ERC1155, AccessControl {
         }
     }
 
-    /// This function decreases activity points for all members by one. Only core delegates or community manegers can increase experience points.
+    /// This function decreases activity points for all members by one. Only core delegates or community managers can increase experience points.
     function decreaseActivityPoints() external {
         // Check blocktime maturity
         require(
@@ -205,7 +205,7 @@ contract SwissDAO is ERC1155, AccessControl {
 
         uint256 _membersArrayLength = s_members.length;
 
-        for (uint256 i = 0; i < _membersArrayLength;) {
+        for (uint256 i; i < _membersArrayLength;) {
             if (balanceOf(s_members[i], ACTIVITY_POINTS) > 0) {
                 _burn(s_members[i], ACTIVITY_POINTS, 1);
             }
