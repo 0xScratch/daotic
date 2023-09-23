@@ -4,6 +4,7 @@ pragma solidity ^0.8.18;
 import { AccessControl } from "@oz/access/AccessControl.sol";
 import { ERC1155 } from "@oz/token/ERC1155/ERC1155.sol";
 import { LibString } from "@solady/utils/LibString.sol";
+import { Base64 } from "@oz/utils/Base64.sol";
 
 contract SwissDAO is ERC1155, AccessControl {
     /*//////////////////////////////////////////////////////////////
@@ -236,7 +237,60 @@ contract SwissDAO is ERC1155, AccessControl {
     /// @dev Explain to a developer any extra details
     /// @param _tokenId TokenId
     function uri(uint256 _tokenId) public view override returns (string memory) {
-        return LibString.concat(s_uri, LibString.toString(_tokenId));
+        bytes memory _svg;
+        string memory _name;
+        string memory _description;
+        string memory _animation_url;
+        string memory _attributes;
+
+        if (_tokenId == 1) {
+            _svg = abi.encodePacked(
+                '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="visual" viewBox="0 0 1000 1000" width="1000" height="1000" version="1.1"><rect x="0" y="0" width="1000" height="1000" fill="#001122"/><path d="M0 838L143 716L286 631L429 765L571 726L714 745L857 760L1000 652L1000 1001L857 1001L714 1001L571 1001L429 1001L286 1001L143 1001L0 1001Z" fill="#C62368" stroke-linecap="square" stroke-linejoin="bevel"/><text fill="white" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="500" letter-spacing="-0.04em" x="200" y="600">XP</text></svg>'
+            );
+            _name = "XP";
+            _description = "Experience Point";
+            _attributes = "[]";
+        } else if (_tokenId == 2) {
+            _svg = abi.encodePacked(
+                '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="visual" viewBox="0 0 1000 1000" width="1000" height="1000" version="1.1"><rect x="0" y="0" width="1000" height="1000" fill="#001122"/><path d="M0 838L143 716L286 631L429 765L571 726L714 745L857 760L1000 652L1000 1001L857 1001L714 1001L571 1001L429 1001L286 1001L143 1001L0 1001Z" fill="#C62368" stroke-linecap="square" stroke-linejoin="bevel"/><text fill="white" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="500" letter-spacing="-0.04em" x="200" y="600">AP</text></svg>'
+            );
+            _name = "AP";
+            _description = "Activity Point";
+            _attributes = "[]";
+        } else if (_tokenId == 3) {
+            _svg = abi.encodePacked(
+                '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="visual" viewBox="0 0 1000 1000" width="1000" height="1000" version="1.1"><rect x="0" y="0" width="1000" height="1000" fill="#001122"/><path d="M0 838L143 716L286 631L429 765L571 726L714 745L857 760L1000 652L1000 1001L857 1001L714 1001L571 1001L429 1001L286 1001L143 1001L0 1001Z" fill="#C62368" stroke-linecap="square" stroke-linejoin="bevel"/><text fill="white" xml:space="preserve" style="white-space: pre" font-family="Arial" font-size="160" letter-spacing="-0.04em" x="200" y="500">EVENTS</text></svg>'
+            );
+            _name = "EVENTS";
+            _description = "Attended Events";
+            _attributes = "[]";
+        }
+
+        bytes memory _metadata = abi.encodePacked(
+            "{",
+            '"name": "',
+            _name,
+            '", ',
+            '"description": "',
+            _description,
+            '", ',
+            '"image": ',
+            '"data:image/svg+xml;base64,',
+            Base64.encode(_svg),
+            '",',
+            '"animation_url": "',
+            _animation_url,
+            '", ',
+            '"attributes": ',
+            _attributes,
+            "}"
+        );
+
+        if (_tokenId == 1 || _tokenId == 2 || _tokenId == 3) {
+            return string(abi.encodePacked("data:application/json;base64,", Base64.encode(_metadata)));
+        } else {
+            return LibString.concat(s_uri, LibString.toString(_tokenId));
+        }
     }
 
     /// This function confirm attendance of a member. Only core delegates or event guild can confirm attendance.
