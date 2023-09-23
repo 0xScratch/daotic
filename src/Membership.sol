@@ -37,22 +37,22 @@ contract Membership is Ownable, AccessControl, ERC721URIStorage, ERC721Enumerabl
     //////////////////////////////////////////////////////////////*/
 
     /// @notice Explain to a developer any extra details
-    bytes32 public constant CORE_DELEGATE_ROLE = keccak256("CORE_DELEGATE_ROLE");
+    bytes32 public immutable CORE_DELEGATE_ROLE = keccak256("CORE_DELEGATE_ROLE");
 
     /// @notice Explain to a developer any extra details
-    bytes32 public constant COMMUNITY_MANAGER_ROLE = keccak256("COMMUNITY_MANAGER_ROLE");
+    bytes32 public immutable COMMUNITY_MANAGER_ROLE = keccak256("COMMUNITY_MANAGER_ROLE");
 
     /// @notice Explain to a developer any extra details
-    bytes32 public constant EVENT_MANAGER_ROLE = keccak256("EVENT_MANAGER_ROLE");
+    bytes32 public immutable EVENT_MANAGER_ROLE = keccak256("EVENT_MANAGER_ROLE");
 
     /// @notice Explain to a developer any extra details
-    bytes32 public constant PROJECT_MANAGER_ROLE = keccak256("PROJECT_MANAGER_ROLE");
+    bytes32 public immutable PROJECT_MANAGER_ROLE = keccak256("PROJECT_MANAGER_ROLE");
 
     /// @notice Explain to a developer any extra details
-    bytes32 public constant TREASURY_MANAGER_ROLE = keccak256("TREASURY_MANAGER_ROLE");
+    bytes32 public immutable TREASURY_MANAGER_ROLE = keccak256("TREASURY_MANAGER_ROLE");
 
     /// @notice Explain to a developer any extra details
-    bytes32 public constant DEVELOPER_ROLE = keccak256("DEVELOPER_ROLE");
+    bytes32 public immutable DEVELOPER_ROLE = keccak256("DEVELOPER_ROLE");
 
     /*//////////////////////////////////////////////////////////////
                                 STRUCTS
